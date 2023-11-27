@@ -1,5 +1,5 @@
 # Instalações
-!pip install streamlit yfinance numpy pandas scipy pytrends google
+pip install streamlit yfinance numpy pandas scipy pytrends google
 
 # Bibliotecas Necessárias
 import streamlit as st
