@@ -1,3 +1,19 @@
+# Instalações
+!pip install yfinance GoogleNews
+!pip install statsforecast
+!pip install statsmodels
+!pip install altair
+
+# Bibliotecas Necessárias
+import yfinance as yf
+from GoogleNews import GoogleNews
+import pandas as pd
+import numpy as np
+from scipy.stats import norm
+from statsmodels.tsa.holtwinters import ExponentialSmoothing
+from dataclasses import dataclass
+import altair as alt
+
 @dataclass
 class Ativo:
     ticker: str
