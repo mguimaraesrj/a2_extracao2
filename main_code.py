@@ -1,9 +1,3 @@
-# Instalações
-!pip install yfinance GoogleNews
-!pip install statsforecast
-!pip install statsmodels
-!pip install altair
-
 # Bibliotecas Necessárias
 import streamlit as st
 import yfinance as yf
