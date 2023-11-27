@@ -1,9 +1,12 @@
 # Bibliotecas Necessárias
-import streamlit as st
 import yfinance as yf
-import numpy as np
+from GoogleNews import GoogleNews
 import pandas as pd
+import numpy as np
 from scipy.stats import norm
+from statsmodels.tsa.holtwinters import ExponentialSmoothing
+from dataclasses import dataclass
+import altair as alt
 
 from dataclasses import dataclass
 
