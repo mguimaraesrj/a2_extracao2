@@ -86,7 +86,7 @@ class AnalisadorDadosMercado(Ativo):
         drift = mu - (0.5 * var)
         stdev = retornos_log.std()
 
-        daily_returns = np.exp(drift + stdev * norm.ppf(np.random.rand(self.dias_a_frente, self.dias_a_frente)))
+        daily_returns = np.exp(drift + stdev * norm.ppf(np.random.rand(self.dias_a_frente, self.1000)))
 
         price_paths = np.zeros((self.dias_a_frente, self.dias_a_frente))
         price_paths[0] = historico_ativo.iloc[-1]
