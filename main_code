@@ -1,18 +1,15 @@
 # Instalações
-!pip install yfinance GoogleNews
-!pip install statsforecast
-!pip install statsmodels
-!pip install altair
+!pip install streamlit yfinance numpy pandas scipy pytrends google
 
 # Bibliotecas Necessárias
+import streamlit as st
 import yfinance as yf
-from GoogleNews import GoogleNews
-import pandas as pd
 import numpy as np
+import pandas as pd
 from scipy.stats import norm
-from statsmodels.tsa.holtwinters import ExponentialSmoothing
-from dataclasses import dataclass
-import altair as alt
+from pytrends.request import TrendReq
+from googlesearch import search
+from datetime import datetime, timedelta
 
 @dataclass
 class Ativo:
@@ -151,41 +148,48 @@ class AnalisadorDadosMercado(Ativo):
         )
 
         # Exibir os gráficos
-        chart_precos.display()
-        chart_simulacao.display()
-        chart_retornos_simulados.display()
+        st.altair_chart(chart_precos)
+        st.altair_chart(chart_simulacao)
+        st.altair_chart(chart_retornos_simulados)
 
 
-# Exemplo de uso
-ticker_interesse = input("Insira o ticker de interesse (ex: MGLU3): ").upper()
-periodo_interesse = input("Insira o período desejado para o histórico de preços (ex: 3mo): ")
+# Função principal do Streamlit
+def main():
+    st.title("Analisador de Dados de Mercado")
+    ticker_interesse = st.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
+    periodo_interesse = st.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
 
-# Criar instância do AnalisadorDadosMercado
-analisador = AnalisadorDadosMercado()
+    if st.button("Analisar"):
+        # Criar instância do AnalisadorDadosMercado
+        analisador = AnalisadorDadosMercado()
 
-# Obter dados
-precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
+        # Obter dados
+        precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
 
-# Simular preços futuros e calcular probabilidade de retorno
-caminhos_precos = analisador.simular_precos(precos)
-prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
+        # Simular preços futuros e calcular probabilidade de retorno
+        caminhos_precos = analisador.simular_precos(precos)
+        prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
 
-# Exibindo resultados e plotando gráficos
-print(f"Histórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
-print(precos.head())
+        # Exibindo resultados e plotando gráficos
+        st.write(f"Histórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
+        st.write(precos.head())
 
-print(f"\nSimulação de Preços Futuros para {ticker_interesse} (dias à frente: {analisador.dias_a_frente}):")
-df_simulacao = pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i+1}' for i in range(analisador.dias_a_frente)])
-print(df_simulacao.head())
+        st.write(f"Simulação de Preços Futuros para {ticker_interesse} (dias à frente: {analisador.dias_a_frente}):")
+        df_simulacao = pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i+1}' for i in range(analisador.dias_a_frente)])
+        st.write(df_simulacao.head())
 
-print(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%")
+        st.write(f"Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%")
 
-print(f"\nÚltimas Notícias para {ticker_interesse} (Limitadas às últimas 10):")
-for i, noticia in enumerate(noticias):
-    print(f"\nNotícia {i + 1}")
-    print(f"Título: {noticia['title']}")
-    print(f"Link: {noticia['link']}")
-    print(f"Data: {noticia['date']}")
+        st.write(f"Últimas Notícias para {ticker_interesse} (Limitadas às últimas 10):")
+        for i, noticia in enumerate(noticias):
+            st.write(f"\nNotícia {i + 1}")
+            st.write(f"Título: {noticia['title']}")
+            st.write(f"Link: {noticia['link']}")
+            st.write(f"Data: {noticia['date']}")
 
-# Plotar gráficos
-analisador.plotar_graficos(precos, caminhos_precos)
+        # Plotar gráficos
+        analisador.plotar_graficos(precos, caminhos_precos)
+
+
+if __name__ == "__main__":
+    main()
