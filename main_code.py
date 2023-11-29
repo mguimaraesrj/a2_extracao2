@@ -28,9 +28,13 @@ class Ativo:
         drift = media_retornos - (0.5 * variancia_retornos)
         desvio_padrao = retornos_log.std()
 
-        retornos_diarios = np.exp(drift + desvio_padrao * norm.ppf(np.random.rand(self.dias_a_frente, self.dias_a_frente)))
+        # Aumentando o número de iterações para 10.000
+        num_iteracoes = 10000
 
-        caminhos_precos = np.zeros((self.dias_a_frente, self.dias_a_frente))
+        # Usando np.random.randn para gerar números aleatórios
+        retornos_diarios = np.exp(drift + desvio_padrao * np.random.randn(self.dias_a_frente, num_iteracoes))
+
+        caminhos_precos = np.zeros((self.dias_a_frente, num_iteracoes))
         caminhos_precos[0] = historico_ativo.iloc[-1]
 
         for t in range(1, self.dias_a_frente):
