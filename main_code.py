@@ -183,7 +183,7 @@ def main():
 
         st.write(f"Simulação de Preços Futuros para {ticker_interesse} (dias à frente: {analisador.dias_a_frente}):")
         df_simulacao = pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i+1}' for i in range(analisador.dias_a_frente)])
-        st.write(df_simulacao.head(1000))
+        st.write(df_simulacao.head())
 
         st.write(f"Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%")
 
@@ -191,7 +191,7 @@ def main():
         for i, noticia in enumerate(noticias):
             st.write(f"\nNotícia {i + 1}")
             st.write(f"Título: {noticia['title']}")
-            st.write(f"Link: {noticia['link']}")
+            st.markdown(f"Link: [{noticia['link']}]({noticia['link']})")
             st.write(f"Data: {noticia['date']}")
 
         # Plotar gráficos
