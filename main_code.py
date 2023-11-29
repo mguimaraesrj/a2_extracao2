@@ -183,7 +183,7 @@ def main():
 
         st.write(f"Simulação de Preços Futuros para {ticker_interesse} (dias à frente: {analisador.dias_a_frente}):")
         df_simulacao = pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i+1}' for i in range(analisador.dias_a_frente)])
-        st.write(df_simulacao.head())
+        st.write(df_simulacao.head(1000))
 
         st.write(f"Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%")
 
