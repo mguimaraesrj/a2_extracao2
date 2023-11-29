@@ -21,7 +21,7 @@ class Ativo:
         historico_ativo = ativo.history(period=self.periodo_anterior)
         return historico_ativo['Close']
 
-    def simular_precos(self, historico_ativo):
+  def simular_precos(self, historico_ativo):
         retornos_log = np.log(1 + historico_ativo.pct_change())
         media_retornos = retornos_log.mean()
         variancia_retornos = retornos_log.var()
@@ -43,12 +43,10 @@ class Ativo:
         return caminhos_precos
 
     def calcular_retorno_probabilidade(self, caminhos_precos):
-        previsto = caminhos_precos[-1]
-        lista_prevista = list(previsto)
         atual = caminhos_precos[0, 0]
-        maiores_ou_iguais = [i / atual for i in lista_prevista if 1 - (i / atual) >= self.retorno_esperado]
-        probabilidade = len(maiores_ou_iguais) / len(lista_prevista)
-        return probabilidade * 100
+        maiores_ou_iguais = [(caminhos_precos[-1, i] / atual) >= (1 + self.retorno_esperado) for i in range(caminhos_precos.shape[1])]
+        probabilidade = np.mean(maiores_ou_iguais)
+        return probabilidade
 
     def probabilidade_retorno(self):
         historico_ativo = self.obter_precos()
