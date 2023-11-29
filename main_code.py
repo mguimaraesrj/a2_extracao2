@@ -9,8 +9,6 @@ from dataclasses import dataclass
 import altair as alt
 import streamlit as st
 
-from dataclasses import dataclass
-
 @dataclass
 class Ativo:
     ticker: str
@@ -155,7 +153,7 @@ class AnalisadorDadosMercado(Ativo):
 
 # Função principal do Streamlit
 def main():
-    st.title("Analisador de Dados de Mercado")
+    st.title("Start Invest")  # Adiciona o título à aplicação Streamlit
     ticker_interesse = st.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
     periodo_interesse = st.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
 
@@ -189,7 +187,6 @@ def main():
 
         # Plotar gráficos
         analisador.plotar_graficos(precos, caminhos_precos)
-
 
 if __name__ == "__main__":
     main()
