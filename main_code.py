@@ -191,7 +191,7 @@ def main():
         for i, noticia in enumerate(noticias):
             st.write(f"\nNotícia {i + 1}")
             st.write(f"Título: {noticia['title']}")
-            st.markdown(f"Link: [{noticia['link']}]({noticia['link']})")
+            st.write(f"Link: {noticia['link']}")
             st.write(f"Data: {noticia['date']}")
 
         # Plotar gráficos
