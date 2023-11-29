@@ -152,9 +152,6 @@ class AnalisadorDadosMercado(Ativo):
         st.altair_chart(chart_simulacao)
         st.altair_chart(chart_retornos_simulados)
 
-        # Exibir a tabela de simulação de preços completa
-        st.write("Tabela de Simulação de Preços:")
-        st.write(df_simulacao)
 
 # Função principal do Streamlit
 def main():
@@ -186,7 +183,7 @@ def main():
 
         st.write(f"Simulação de Preços Futuros para {ticker_interesse} (dias à frente: {analisador.dias_a_frente}):")
         df_simulacao = pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i+1}' for i in range(analisador.dias_a_frente)])
-        st.write(df_simulacao)
+        st.write(df_simulacao.head())
 
         st.write(f"Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%")
 
