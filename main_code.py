@@ -28,13 +28,9 @@ class Ativo:
         drift = media_retornos - (0.5 * variancia_retornos)
         desvio_padrao = retornos_log.std()
 
-        # Aumentando o número de iterações para 10.000
-        num_iteracoes = 10000
+        retornos_diarios = np.exp(drift + desvio_padrao * norm.ppf(np.random.rand(self.dias_a_frente, self.dias_a_frente)))
 
-        # Usando np.random.randn para gerar números aleatórios
-        retornos_diarios = np.exp(drift + desvio_padrao * np.random.randn(self.dias_a_frente, num_iteracoes))
-
-        caminhos_precos = np.zeros((self.dias_a_frente, num_iteracoes))
+        caminhos_precos = np.zeros((self.dias_a_frente, self.dias_a_frente))
         caminhos_precos[0] = historico_ativo.iloc[-1]
 
         for t in range(1, self.dias_a_frente):
@@ -43,10 +39,12 @@ class Ativo:
         return caminhos_precos
 
     def calcular_retorno_probabilidade(self, caminhos_precos):
+        previsto = caminhos_precos[-1]
+        lista_prevista = list(previsto)
         atual = caminhos_precos[0, 0]
-        maiores_ou_iguais = [(caminhos_precos[-1, i] / atual) >= (1 + self.retorno_esperado) for i in range(caminhos_precos.shape[1])]
-        probabilidade = np.mean(maiores_ou_iguais)
-        return probabilidade
+        maiores_ou_iguais = [i / atual for i in lista_prevista if 1 - (i / atual) >= self.retorno_esperado]
+        probabilidade = len(maiores_ou_iguais) / len(lista_prevista)
+        return probabilidade * 100
 
     def probabilidade_retorno(self):
         historico_ativo = self.obter_precos()
