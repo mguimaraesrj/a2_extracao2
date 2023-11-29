@@ -28,9 +28,13 @@ class Ativo:
         drift = media_retornos - (0.5 * variancia_retornos)
         desvio_padrao = retornos_log.std()
 
-        retornos_diarios = np.exp(drift + desvio_padrao * norm.ppf(np.random.rand(self.dias_a_frente, self.dias_a_frente)))
+        # Aumentando o número de iterações para 10.000
+        num_iteracoes = 10000
 
-        caminhos_precos = np.zeros((self.dias_a_frente, self.dias_a_frente))
+        # Usando np.random.randn para gerar números aleatórios
+        retornos_diarios = np.exp(drift + desvio_padrao * np.random.randn(self.dias_a_frente, num_iteracoes))
+
+        caminhos_precos = np.zeros((self.dias_a_frente, num_iteracoes))
         caminhos_precos[0] = historico_ativo.iloc[-1]
 
         for t in range(1, self.dias_a_frente):
@@ -39,12 +43,10 @@ class Ativo:
         return caminhos_precos
 
     def calcular_retorno_probabilidade(self, caminhos_precos):
-        previsto = caminhos_precos[-1]
-        lista_prevista = list(previsto)
         atual = caminhos_precos[0, 0]
-        maiores_ou_iguais = [i / atual for i in lista_prevista if 1 - (i / atual) >= self.retorno_esperado]
-        probabilidade = len(maiores_ou_iguais) / len(lista_prevista)
-        return probabilidade * 100
+        maiores_ou_iguais = [(caminhos_precos[-1, i] / atual) >= (1 + self.retorno_esperado) for i in range(caminhos_precos.shape[1])]
+        probabilidade = np.mean(maiores_ou_iguais)
+        return probabilidade
 
     def probabilidade_retorno(self):
         historico_ativo = self.obter_precos()
@@ -70,7 +72,18 @@ class AnalisadorDadosMercado(Ativo):
     def obter_noticias(self, ticker, num_noticias=10):
         googlenews = GoogleNews(lang='ptbr', region='BR', period='7d')
         googlenews.get_news(ticker)
-        return googlenews.results()[:num_noticias]
+        noticias = googlenews.results()[:num_noticias]
+
+        noticias_formatadas = []
+        for i, noticia in enumerate(noticias):
+            link_markdown = f"[{noticia['link']}]({noticia['link']})"
+            noticias_formatadas.append({
+                'Título': noticia['title'],
+                'Link': link_markdown,
+                'Data': noticia['date']
+            })
+
+        return noticias_formatadas
 
     def baixar_dados(self, ticker, periodo='2mo'):
         precos = self.obter_preco(ticker, periodo)
@@ -104,7 +117,7 @@ class AnalisadorDadosMercado(Ativo):
         # Implemente a lógica do método complexo aqui, se necessário
         pass
 
-    def plotar_graficos(self, precos, caminhos_precos):
+    def plotar_graficos(self, precos, caminhos_precos, noticias):
         # Gráfico do Histórico de Preços
         df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
         chart_precos = alt.Chart(df_precos).mark_line().encode(
@@ -150,6 +163,17 @@ class AnalisadorDadosMercado(Ativo):
         st.altair_chart(chart_simulacao)
         st.altair_chart(chart_retornos_simulados)
 
+        # Exibir a tabela de simulação de preços completa
+        st.write("Tabela de Simulação de Preços:")
+        st.write(df_simulacao)
+
+        # Exibir as notícias formatadas
+        st.write(f"Últimas Notícias para {self.ticker} (Limitadas às últimas 10):")
+        for i, noticia in enumerate(noticias):
+            st.write(f"\nNotícia {i + 1}")
+            st.write(f"Título: {noticia['Título']}")
+            st.markdown(f"Link: {noticia['Link']}")
+            st.write(f"Data: {noticia['Data']}")
 
 # Função principal do Streamlit
 def main():
@@ -181,19 +205,19 @@ def main():
 
         st.write(f"Simulação de Preços Futuros para {ticker_interesse} (dias à frente: {analisador.dias_a_frente}):")
         df_simulacao = pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i+1}' for i in range(analisador.dias_a_frente)])
-        st.write(df_simulacao.head())
+        st.write(df_simulacao)
 
         st.write(f"Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%")
 
         st.write(f"Últimas Notícias para {ticker_interesse} (Limitadas às últimas 10):")
         for i, noticia in enumerate(noticias):
             st.write(f"\nNotícia {i + 1}")
-            st.write(f"Título: {noticia['title']}")
-            st.write(f"Link: {noticia['link']}")
-            st.write(f"Data: {noticia['date']}")
+            st.write(f"Título: {noticia['Título']}")
+            st.markdown(f"Link: {noticia['Link']}")
+            st.write(f"Data: {noticia['Data']}")
 
         # Plotar gráficos
-        analisador.plotar_graficos(precos, caminhos_precos)
+        analisador.plotar_graficos(precos, caminhos_precos, noticias)
 
 if __name__ == "__main__":
     main()
