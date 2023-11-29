@@ -1,4 +1,4 @@
-import streamlit as st
+# Bibliotecas Necessárias
 import yfinance as yf
 from GoogleNews import GoogleNews
 import pandas as pd
@@ -6,6 +6,7 @@ import numpy as np
 from scipy.stats import norm
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from dataclasses import dataclass
+import altair as alt
 
 @dataclass
 class Ativo:
@@ -102,57 +103,83 @@ class AnalisadorDadosMercado(Ativo):
         # Implemente a lógica do método complexo aqui, se necessário
         pass
 
-    def plotar_graficos_streamlit(self, precos, caminhos_precos):
+    def plotar_graficos(self, precos, caminhos_precos):
         # Gráfico do Histórico de Preços
-        st.line_chart(precos.rename('Histórico de Preços'))
+        df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
+        chart_precos = alt.Chart(df_precos).mark_line().encode(
+            x='Data:T',
+            y='Preço de Fechamento:Q'
+        ).properties(
+            width=600,
+            height=400,
+            title=f'Histórico de Preços para {self.ticker}'
+        )
 
         # Gráfico da Simulação de Preços Futuros
         df_simulacao = pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i + 1}' for i in range(self.dias_a_frente)])
         df_simulacao['Data'] = precos.index[-1] + pd.to_timedelta(df_simulacao.index, unit='D')
         df_simulacao = pd.melt(df_simulacao, id_vars=['Data'], var_name='Dia', value_name='Preço de Fechamento Simulado')
-        st.line_chart(df_simulacao.set_index('Data').drop(columns=['Dia']))
+        chart_simulacao = alt.Chart(df_simulacao).mark_line(opacity=0.1, color='blue').encode(
+            x='Data:T',
+            y='Preço de Fechamento Simulado:Q',
+            detail='Dia:N'
+        ).properties(
+            width=600,
+            height=400,
+            title=f'Simulação de Preços Futuros para {self.ticker}'
+        )
 
         # Gráfico da Distribuição dos Retornos Simulados
         retornos_simulados = (caminhos_precos[-1] / caminhos_precos[0, 0]) - 1
         df_retornos_simulados = pd.DataFrame({'Retorno Simulado': retornos_simulados})
-        st.bar_chart(df_retornos_simulados['Retorno Simulado'])
+        chart_retornos_simulados = alt.Chart(df_retornos_simulados).mark_bar(
+            color='green',
+            opacity=0.7
+        ).encode(
+            alt.X('Retorno Simulado:Q', bin=alt.Bin(maxbins=30)),
+            alt.Y('count():Q')
+        ).properties(
+            width=600,
+            height=400,
+            title='Distribuição dos Retornos Simulados'
+        )
 
-# Exemplo de uso no Streamlit
-def main():
-    st.title("Analisador de Dados de Mercado")
+        # Exibir os gráficos
+        chart_precos.display()
+        chart_simulacao.display()
+        chart_retornos_simulados.display()
 
-    # Sidebar para entrada de dados
-    ticker_interesse = st.sidebar.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
-    periodo_interesse = st.sidebar.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
 
-    # Criar instância do AnalisadorDadosMercado
-    analisador = AnalisadorDadosMercado()
+# Exemplo de uso
+ticker_interesse = input("Insira o ticker de interesse (ex: MGLU3): ").upper()
+periodo_interesse = input("Insira o período desejado para o histórico de preços (ex: 3mo): ")
 
-    # Obter dados
-    precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
+# Criar instância do AnalisadorDadosMercado
+analisador = AnalisadorDadosMercado()
 
-    # Simular preços futuros e calcular probabilidade de retorno
-    caminhos_precos = analisador.simular_precos(precos)
-    prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
+# Obter dados
+precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
 
-    # Exibindo resultados e plotando gráficos no Streamlit
-    st.write(f"Histórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
-    st.write(precos.head())
+# Simular preços futuros e calcular probabilidade de retorno
+caminhos_precos = analisador.simular_precos(precos)
+prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
 
-    st.write(f"Simulação de Preços Futuros para {ticker_interesse} (dias à frente: {analisador.dias_a_frente}):")
-    st.write(pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i + 1}' for i in range(analisador.dias_a_frente)]).head())
+# Exibindo resultados e plotando gráficos
+print(f"Histórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
+print(precos.head())
 
-    st.write(f"Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado * 100}%: {prob_retorno * 100:.2f}%")
+print(f"\nSimulação de Preços Futuros para {ticker_interesse} (dias à frente: {analisador.dias_a_frente}):")
+df_simulacao = pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i+1}' for i in range(analisador.dias_a_frente)])
+print(df_simulacao.head())
 
-    st.write(f"Últimas Notícias para {ticker_interesse} (Limitadas às últimas 10):")
-    for i, noticia in enumerate(noticias):
-        st.write(f"\nNotícia {i + 1}")
-        st.write(f"Título: {noticia['title']}")
-        st.write(f"Link: {noticia['link']}")
-        st.write(f"Data: {noticia['date']}")
+print(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%")
 
-    # Plotar gráficos no Streamlit
-    analisador.plotar_graficos_streamlit(precos, caminhos_precos)
+print(f"\nÚltimas Notícias para {ticker_interesse} (Limitadas às últimas 10):")
+for i, noticia in enumerate(noticias):
+    print(f"\nNotícia {i + 1}")
+    print(f"Título: {noticia['title']}")
+    print(f"Link: {noticia['link']}")
+    print(f"Data: {noticia['date']}")
 
-if __name__ == "__main__":
-    main()
+# Plotar gráficos
+analisador.plotar_graficos(precos, caminhos_precos)
