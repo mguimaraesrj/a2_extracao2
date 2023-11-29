@@ -4,7 +4,6 @@ from GoogleNews import GoogleNews
 import pandas as pd
 import numpy as np
 from scipy.stats import norm
-from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from dataclasses import dataclass
 import altair as alt
 import streamlit as st
@@ -75,7 +74,7 @@ class AnalisadorDadosMercado(Ativo):
         noticias = googlenews.results()[:num_noticias]
 
         noticias_formatadas = []
-        for i, noticia in enumerate(noticias):
+        for noticia in noticias:
             link_markdown = f"[{noticia['link']}]({noticia['link']})"
             noticias_formatadas.append({
                 'Título': noticia['title'],
