@@ -1,4 +1,4 @@
-# Bibliotecas Necessárias
+import streamlit as st
 import yfinance as yf
 from GoogleNews import GoogleNews
 import pandas as pd
@@ -145,14 +145,16 @@ class AnalisadorDadosMercado(Ativo):
         )
 
         # Exibir os gráficos
-        chart_precos.display()
-        chart_simulacao.display()
-        chart_retornos_simulados.display()
+        st.altair_chart(chart_precos)
+        st.altair_chart(chart_simulacao)
+        st.altair_chart(chart_retornos_simulados)
 
+# Interface do Streamlit
+st.title("Analisador de Dados de Mercado")
 
-# Exemplo de uso
-ticker_interesse = input("Insira o ticker de interesse (ex: MGLU3): ").upper()
-periodo_interesse = input("Insira o período desejado para o histórico de preços (ex: 3mo): ")
+# Obter entrada do usuário
+ticker_interesse = st.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
+periodo_interesse = st.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
 
 # Criar instância do AnalisadorDadosMercado
 analisador = AnalisadorDadosMercado()
@@ -165,21 +167,21 @@ caminhos_precos = analisador.simular_precos(precos)
 prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
 
 # Exibindo resultados e plotando gráficos
-print(f"Histórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
-print(precos.head())
+st.write(f"Histórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
+st.write(precos.head())
 
-print(f"\nSimulação de Preços Futuros para {ticker_interesse} (dias à frente: {analisador.dias_a_frente}):")
-df_simulacao = pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i+1}' for i in range(analisador.dias_a_frente)])
-print(df_simulacao.head())
+st.write(f"\nSimulação de Preços Futuros para {ticker_interesse} (dias à frente: {analisador.dias_a_frente}):")
+df_simulacao = pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i + 1}' for i in range(analisador.dias_a_frente)])
+st.write(df_simulacao.head())
 
-print(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%")
+st.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado * 100}%: {prob_retorno * 100:.2f}%")
 
-print(f"\nÚltimas Notícias para {ticker_interesse} (Limitadas às últimas 10):")
+st.write(f"\nÚltimas Notícias para {ticker_interesse} (Limitadas às últimas 10):")
 for i, noticia in enumerate(noticias):
-    print(f"\nNotícia {i + 1}")
-    print(f"Título: {noticia['title']}")
-    print(f"Link: {noticia['link']}")
-    print(f"Data: {noticia['date']}")
+    st.write(f"\nNotícia {i + 1}")
+    st.write(f"Título: {noticia['title']}")
+    st.write(f"Link: {noticia['link']}")
+    st.write(f"Data: {noticia['date']}")
 
 # Plotar gráficos
 analisador.plotar_graficos(precos, caminhos_precos)
