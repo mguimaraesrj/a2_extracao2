@@ -172,7 +172,7 @@ class AnalisadorDadosMercado(Ativo):
         for i, noticia in enumerate(noticias):
             st.write(f"\nNotícia {i + 1}")
             st.write(f"Título: {noticia['Título']}")
-            st.markdown(f"Link: {noticia['Link']}")
+            st.write(f"Link: {noticia['Link']}")
             st.write(f"Data: {noticia['Data']}")
 
 # Função principal do Streamlit
@@ -213,7 +213,7 @@ def main():
         for i, noticia in enumerate(noticias):
             st.write(f"\nNotícia {i + 1}")
             st.write(f"Título: {noticia['Título']}")
-            st.markdown(f"Link: {noticia['Link']}")
+            st.write(f"Link: {noticia['Link']}")
             st.write(f"Data: {noticia['Data']}")
 
         # Plotar gráficos
