@@ -153,11 +153,18 @@ class AnalisadorDadosMercado(Ativo):
 
 # Função principal do Streamlit
 def main():
-    st.title("Start Invest")  # Adiciona o título à aplicação Streamlit
-    ticker_interesse = st.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
-    periodo_interesse = st.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
+    # Adiciona o título à aplicação Streamlit
+    st.title("Start Invest")
 
-    if st.button("Analisar"):
+    # Adiciona uma barra lateral azul marinho com opção de input para o ticker
+    st.sidebar.title("Configurações")
+    st.sidebar.markdown(
+        "Configure as opções abaixo:"
+    )
+    ticker_interesse = st.sidebar.text_input("Ticker de interesse (ex: MGLU3):").upper()
+    periodo_interesse = st.sidebar.text_input("Período desejado para o histórico de preços (ex: 3mo):")
+
+    if st.sidebar.button("Analisar"):
         # Criar instância do AnalisadorDadosMercado
         analisador = AnalisadorDadosMercado()
 
