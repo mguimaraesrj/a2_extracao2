@@ -21,7 +21,7 @@ class Ativo:
         historico_ativo = ativo.history(period=self.periodo_anterior)
         return historico_ativo['Close']
 
-  def simular_precos(self, historico_ativo):
+    def simular_precos(self, historico_ativo):
         retornos_log = np.log(1 + historico_ativo.pct_change())
         media_retornos = retornos_log.mean()
         variancia_retornos = retornos_log.var()
