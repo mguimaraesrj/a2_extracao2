@@ -172,18 +172,20 @@ if st.sidebar.button("Analisar"):
     # Exibindo resultados e plotando gráficos
     st.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%")
 
-    st.write(f"\nÚltimas Notícias para {ticker_interesse} (Limitadas às últimas 10):")
-    noticias = analisador.obter_noticias(ticker_interesse)
-    if noticias:
-        # Criar lista para exibir notícias
-        for i, noticia in enumerate(noticias[:10]):
-            st.write(f"\nNotícia {i + 1}")
-            st.write(f"Título: {noticia['title']}")
-            
-            # Tornar o link clicável usando st.markdown
-            st.markdown(f"Link: [{noticia['link']}]({noticia['link']})")
-            
-            st.write(f"Data: {noticia['date']}")
+    # Área exclusiva para notícias
+    with st.beta_expander("Notícias"):
+        st.write(f"\nÚltimas Notícias para {ticker_interesse} (Limitadas às últimas 10):")
+        noticias = analisador.obter_noticias(ticker_interesse)
+        if noticias:
+            # Criar lista para exibir notícias
+            for i, noticia in enumerate(noticias[:10]):
+                st.write(f"\nNotícia {i + 1}")
+                st.write(f"Título: {noticia['title']}")
+                
+                # Tornar o link clicável usando st.markdown
+                st.markdown(f"Link: [{noticia['link']}]({noticia['link']})")
+                
+                st.write(f"Data: {noticia['date']}")
 
     # Plotar gráfico de histórico de preços
     st.write(f"\nHistórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
