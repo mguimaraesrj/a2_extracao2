@@ -27,22 +27,21 @@ class Ativo:
         return historico_ativo['Close']
 
     @staticmethod
-    def simular_precos(historico_ativo, dias_a_frente, retorno_esperado):
-        retornos_log = np.log(1 + historico_ativo.pct_change())
-        media_retornos = retornos_log.mean()
-        variancia_retornos = retornos_log.var()
-        drift = media_retornos - (0.5 * variancia_retornos)
-        desvio_padrao = retornos_log.std()
+    def simular_precos(historico_ativo, dias_a_frente, retorno_esperado, num_simulacoes=1000):
+        resultados_simulacao = []
 
-        retornos_diarios = np.exp(drift + desvio_padrao * norm.ppf(np.random.rand(dias_a_frente, dias_a_frente)))
+        for _ in range(num_simulacoes):
+            retornos_diarios = np.exp(drift + desvio_padrao * norm.ppf(np.random.rand(dias_a_frente)))
 
-        caminhos_precos = np.zeros((dias_a_frente, dias_a_frente))
-        caminhos_precos[0] = historico_ativo.iloc[-1]
+            caminhos_precos = np.zeros((dias_a_frente, dias_a_frente))
+            caminhos_precos[0] = historico_ativo.iloc[-1]
 
-        for t in range(1, dias_a_frente):
-            caminhos_precos[t] = caminhos_precos[t - 1] * retornos_diarios[t]
+            for t in range(1, dias_a_frente):
+                caminhos_precos[t] = caminhos_precos[t - 1] * retornos_diarios[t]
 
-        return caminhos_precos
+            resultados_simulacao.append(caminhos_precos)
+
+        return resultados_simulacao
 
     @staticmethod
     def calcular_retorno_probabilidade(caminhos_precos, retorno_esperado):
