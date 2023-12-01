@@ -152,7 +152,7 @@ class AnalisadorDadosMercado(Ativo):
 
 
 # Exemplo de uso com Streamlit
-st.title("Analisador de Ações")
+st.title("Start Investor")
 
 ticker_interesse = st.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
 periodo_interesse = st.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
