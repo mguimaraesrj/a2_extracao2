@@ -1,3 +1,7 @@
+# Instalações
+# Instale os pacotes diretamente no ambiente virtual antes de executar o script
+# pip install yfinance GoogleNews statsforecast statsmodels altair streamlit
+
 # Importações
 import yfinance as yf
 from GoogleNews import GoogleNews
@@ -73,6 +77,11 @@ class AnalisadorDadosMercado(Ativo):
     def obter_noticias(self, ticker, num_noticias=10):
         googlenews = GoogleNews(lang='ptbr', region='BR', period='7d')
         googlenews.get_news(ticker)
+
+        # Verificar se há resultados antes de retornar
+        if not googlenews.results():
+            return []
+
         return googlenews.results()[:num_noticias]
 
     def baixar_dados(self, ticker, periodo='2mo'):
@@ -178,11 +187,15 @@ if st.button("Analisar"):
     st.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%")
 
     st.write(f"\nÚltimas Notícias para {ticker_interesse} (Limitadas às últimas 10):")
-    for i, noticia in enumerate(noticias):
-        st.write(f"\nNotícia {i + 1}")
-        st.write(f"Título: {noticia['title']}")
-        st.write(f"Link: {noticia['link']}")
-        st.write(f"Data: {noticia['date']}")
+    noticias = analisador.obter_noticias(ticker_interesse)
+    if noticias:
+        for i, noticia in enumerate(noticias):
+            st.write(f"\nNotícia {i + 1}")
+            st.write(f"Título: {noticia['title']}")
+            st.write(f"Link: {noticia['link']}")
+            st.write(f"Data: {noticia['date']}")
+    else:
+        st.write("Nenhuma notícia encontrada para o ticker fornecido.")
 
     # Plotar gráficos
     analisador.plotar_graficos(precos, caminhos_precos)
