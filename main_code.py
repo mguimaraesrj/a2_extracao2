@@ -163,7 +163,7 @@ periodo_interesse = st.radio("Escolha o período desejado:", periodo_opcoes + ["
 if periodo_interesse == "Outro":
     periodo_interesse = st.text_input("Insira manualmente o período desejado (ex: 3mo):")
 else:
-    # Ajuste do layout para alinhar os botões horizontalmente
+# Ajuste do layout para alinhar os botões horizontalmente
 col1, col2, col3 = st.columns(3)
 
 # Exibir botões em colunas
@@ -203,8 +203,6 @@ if periodo_interesse == "Outro":
     periodo_interesse = st.sidebar.text_input("Insira manualmente o período desejado (ex: 3mo):")
 
 if st.button("Analisar"):
-    # Restante do código...
-
     # Criar instância do AnalisadorDadosMercado
     analisador = AnalisadorDadosMercado()
 
