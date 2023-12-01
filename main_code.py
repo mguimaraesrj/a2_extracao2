@@ -169,13 +169,6 @@ if st.button("Analisar"):
     prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
 
     # Exibindo resultados e plotando gráficos
-    st.write(f"Histórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
-    st.write(precos.head())
-
-    st.write(f"\nSimulação de Preços Futuros para {ticker_interesse} (dias à frente: {analisador.dias_a_frente}):")
-    df_simulacao = pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i+1}' for i in range(analisador.dias_a_frente)])
-    st.write(df_simulacao.head())
-
     st.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%")
 
     st.write(f"\nÚltimas Notícias para {ticker_interesse} (Limitadas às últimas 10):")
@@ -192,6 +185,3 @@ if st.button("Analisar"):
             st.write(f"Data: {noticia['date']}")
     else:
         st.write("Nenhuma notícia encontrada para o ticker fornecido.")
-
-    # Plotar gráficos
-    analisador.plotar_graficos(precos, caminhos_precos)
