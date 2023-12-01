@@ -156,24 +156,24 @@ st.title("Analisador de Ações")
 
 ticker_interesse = st.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
 
-# Usar st.beta_columns para organizar os botões horizontalmente
+# Usar st.columns para organizar os botões horizontalmente
 col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
 
 # Adicionando botões para seleção de períodos predefinidos
 with col1:
     periodo_opcao_1 = st.button("1m", key='1m')
 with col2:
-    periodo_opcao_3 = st.button("3m", key='3m')
+    periodo_opcao_2 = st.button("2m", key='2m')
 with col3:
-    periodo_opcao_6 = st.button("6m", key='6m')
+    periodo_opcao_3 = st.button("3m", key='3m')
 with col4:
-    periodo_opcao_1y = st.button("1y", key='1y')
+    periodo_opcao_6 = st.button("6m", key='6m')
 with col5:
-    periodo_opcao_2y = st.button("2y", key='2y')
+    periodo_opcao_12 = st.button("1y", key='1y')
 with col6:
-    periodo_opcao_5y = st.button("5y", key='5y')
+    periodo_opcao_24 = st.button("2y", key='2y')
 with col7:
-    periodo_opcao_max = st.button("Max", key='max')
+    periodo_opcao_60 = st.button("5y", key='5y')
 
 # Adicionando a caixa para um input manual do usuário
 periodo_interesse = st.text_input("Ou insira manualmente o período desejado para o histórico de preços (ex: 3mo):")
@@ -182,28 +182,24 @@ periodo_interesse = st.text_input("Ou insira manualmente o período desejado par
 if periodo_interesse and not periodo_interesse.strip().isdigit():
     st.error("Por favor, insira um período válido (por exemplo, '3mo').")
 
-if st.button("Analisar"):
-    # Criar instância do AnalisadorDadosMercado
-    analisador = AnalisadorDadosMercado()
-
-    # Determinar o período com base nos botões pressionados
+# Função para obter o período selecionado
+def obter_periodo_selecionado():
     if periodo_opcao_1:
-        periodo_selecionado = "1mo"
+        return "1mo"
+    elif periodo_opcao_2:
+        return "2mo"
     elif periodo_opcao_3:
-        periodo_selecionado = "3mo"
+        return "3mo"
     elif periodo_opcao_6:
-        periodo_selecionado = "6mo"
-    elif periodo_opcao_1y:
-        periodo_selecionado = "1y"
-    elif periodo_opcao_2y:
-        periodo_selecionado = "2y"
-    elif periodo_opcao_5y:
-        periodo_selecionado = "5y"
-    elif periodo_opcao_max:
-        periodo_selecionado = "Max"
+        return "6mo"
+    elif periodo_opcao_12:
+        return "1y"
+    elif periodo_opcao_24:
+        return "2y"
+    elif periodo_opcao_60:
+        return "5y"
     else:
-        # Se nenhum botão for pressionado, usar a entrada manual
-        periodo_selecionado = periodo_interesse.strip()
+        return periodo_interesse.strip()
 
     # Obter dados
     precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_selecionado)
