@@ -155,21 +155,35 @@ class AnalisadorDadosMercado(Ativo):
 st.title("Analisador de Ações")
 
 ticker_interesse = st.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
-periodo_interesse = st.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
+
+# Adicionando botões para seleção de períodos predefinidos
+periodo_opcoes = st.radio("Selecione o período de histórico desejado:",
+                          ["1mo", "3mo", "6mo", "1y", "2y", "5y", "Max"],
+                          index=3)  # Index 3 corresponde a "1y" como opção padrão
+
+# Adicionando a caixa para um input manual do usuário
+periodo_interesse = st.text_input("Ou insira manualmente o período desejado para o histórico de preços (ex: 3mo):")
+
+# Validando se foi inserido manualmente e se é uma entrada válida
+if periodo_interesse and not periodo_interesse.strip().isdigit():
+    st.error("Por favor, insira um período válido (por exemplo, '3mo').")
 
 if st.button("Analisar"):
     # Criar instância do AnalisadorDadosMercado
     analisador = AnalisadorDadosMercado()
 
+    # Utilizar o período selecionado ou inserido manualmente
+    periodo_selecionado = periodo_opcoes if not periodo_interesse else periodo_interesse.strip()
+
     # Obter dados
-    precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
+    precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_selecionado)
 
     # Simular preços futuros e calcular probabilidade de retorno
     caminhos_precos = analisador.simular_precos(precos)
     prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
 
     # Exibindo resultados e plotando gráficos
-    st.write(f"Histórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
+    st.write(f"Histórico de Preços para {ticker_interesse} (últimos {periodo_selecionado}):")
     st.write(precos.head())
 
     st.write(f"\nSimulação de Preços Futuros para {ticker_interesse} (dias à frente: {analisador.dias_a_frente}):")
