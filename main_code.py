@@ -1,4 +1,8 @@
-import streamlit as st
+# Instalações
+# Instale os pacotes diretamente no ambiente virtual antes de executar o script
+# pip install yfinance GoogleNews statsforecast statsmodels altair
+
+# Bibliotecas Necessárias
 import yfinance as yf
 from GoogleNews import GoogleNews
 import pandas as pd
@@ -15,40 +19,43 @@ class Ativo:
     dias_a_frente: int = 30
     retorno_esperado: float = 0.05
 
-    def obter_precos(self):
-        ativo = yf.Ticker(self.ticker)
-        historico_ativo = ativo.history(period=self.periodo_anterior)
+    @staticmethod
+    def obter_precos(ticker, periodo):
+        ativo = yf.Ticker(ticker)
+        historico_ativo = ativo.history(period=periodo)
         return historico_ativo['Close']
 
-    def simular_precos(self, historico_ativo):
+    @staticmethod
+    def simular_precos(historico_ativo, dias_a_frente, retorno_esperado):
         retornos_log = np.log(1 + historico_ativo.pct_change())
         media_retornos = retornos_log.mean()
         variancia_retornos = retornos_log.var()
         drift = media_retornos - (0.5 * variancia_retornos)
         desvio_padrao = retornos_log.std()
 
-        retornos_diarios = np.exp(drift + desvio_padrao * norm.ppf(np.random.rand(self.dias_a_frente, self.dias_a_frente)))
+        retornos_diarios = np.exp(drift + desvio_padrao * norm.ppf(np.random.rand(dias_a_frente, dias_a_frente)))
 
-        caminhos_precos = np.zeros((self.dias_a_frente, self.dias_a_frente))
+        caminhos_precos = np.zeros((dias_a_frente, dias_a_frente))
         caminhos_precos[0] = historico_ativo.iloc[-1]
 
-        for t in range(1, self.dias_a_frente):
+        for t in range(1, dias_a_frente):
             caminhos_precos[t] = caminhos_precos[t - 1] * retornos_diarios[t]
 
         return caminhos_precos
 
-    def calcular_retorno_probabilidade(self, caminhos_precos):
+    @staticmethod
+    def calcular_retorno_probabilidade(caminhos_precos, retorno_esperado):
         previsto = caminhos_precos[-1]
         lista_prevista = list(previsto)
         atual = caminhos_precos[0, 0]
-        maiores_ou_iguais = [i / atual for i in lista_prevista if 1 - (i / atual) >= self.retorno_esperado]
+        maiores_ou_iguais = [i / atual for i in lista_prevista if 1 - (i / atual) >= retorno_esperado]
         probabilidade = len(maiores_ou_iguais) / len(lista_prevista)
         return probabilidade * 100
 
     def probabilidade_retorno(self):
-        historico_ativo = self.obter_precos()
-        caminhos_precos = self.simular_precos(historico_ativo)
-        return self.calcular_retorno_probabilidade(caminhos_precos)
+        historico_ativo = self.obter_precos(self.ticker, self.periodo_anterior)
+        caminhos_precos = self.simular_precos(historico_ativo, self.dias_a_frente, self.retorno_esperado)
+        return self.calcular_retorno_probabilidade(caminhos_precos, self.retorno_esperado)
 
 
 class AnalisadorDadosMercado(Ativo):
@@ -99,10 +106,6 @@ class AnalisadorDadosMercado(Ativo):
         prob = np.mean(over)
         return prob
 
-    def complex_method(self):
-        # Implemente a lógica do método complexo aqui, se necessário
-        pass
-
     def plotar_graficos(self, precos, caminhos_precos):
         # Gráfico do Histórico de Preços
         df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
@@ -145,43 +148,46 @@ class AnalisadorDadosMercado(Ativo):
         )
 
         # Exibir os gráficos
-        st.altair_chart(chart_precos)
-        st.altair_chart(chart_simulacao)
-        st.altair_chart(chart_retornos_simulados)
+        chart_precos.display()
+        chart_simulacao.display()
+        chart_retornos_simulados.display()
 
-# Interface do Streamlit
-st.title("Analisador de Dados de Mercado")
 
-# Obter entrada do usuário
+# Exemplo de uso com Streamlit
+import streamlit as st
+
+st.title("Analisador de Ações")
+
 ticker_interesse = st.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
 periodo_interesse = st.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
 
-# Criar instância do AnalisadorDadosMercado
-analisador = AnalisadorDadosMercado()
+if st.button("Analisar"):
+    # Criar instância do AnalisadorDadosMercado
+    analisador = AnalisadorDadosMercado()
 
-# Obter dados
-precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
+    # Obter dados
+    precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
 
-# Simular preços futuros e calcular probabilidade de retorno
-caminhos_precos = analisador.simular_precos(precos)
-prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
+    # Simular preços futuros e calcular probabilidade de retorno
+    caminhos_precos = analisador.simular_precos(precos)
+    prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
 
-# Exibindo resultados e plotando gráficos
-st.write(f"Histórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
-st.write(precos.head())
+    # Exibindo resultados e plotando gráficos
+    st.write(f"Histórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
+    st.write(precos.head())
 
-st.write(f"\nSimulação de Preços Futuros para {ticker_interesse} (dias à frente: {analisador.dias_a_frente}):")
-df_simulacao = pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i + 1}' for i in range(analisador.dias_a_frente)])
-st.write(df_simulacao.head())
+    st.write(f"\nSimulação de Preços Futuros para {ticker_interesse} (dias à frente: {analisador.dias_a_frente}):")
+    df_simulacao = pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i+1}' for i in range(analisador.dias_a_frente)])
+    st.write(df_simulacao.head())
 
-st.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado * 100}%: {prob_retorno * 100:.2f}%")
+    st.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%")
 
-st.write(f"\nÚltimas Notícias para {ticker_interesse} (Limitadas às últimas 10):")
-for i, noticia in enumerate(noticias):
-    st.write(f"\nNotícia {i + 1}")
-    st.write(f"Título: {noticia['title']}")
-    st.write(f"Link: {noticia['link']}")
-    st.write(f"Data: {noticia['date']}")
+    st.write(f"\nÚltimas Notícias para {ticker_interesse} (Limitadas às últimas 10):")
+    for i, noticia in enumerate(noticias):
+        st.write(f"\nNotícia {i + 1}")
+        st.write(f"Título: {noticia['title']}")
+        st.write(f"Link: {noticia['link']}")
+        st.write(f"Data: {noticia['date']}")
 
-# Plotar gráficos
-analisador.plotar_graficos(precos, caminhos_precos)
+    # Plotar gráficos
+    analisador.plotar_graficos(precos, caminhos_precos)
