@@ -76,11 +76,10 @@ class AnalisadorDadosMercado(Ativo):
         results = googlenews.results()
         return results[:num_noticias]
 
-        def baixar_dados(self, ticker, periodo='2mo'):
+    def baixar_dados(self, ticker, periodo='2mo'):
         precos = self.obter_preco(ticker, periodo)
         noticias = self.obter_noticias(ticker)
         return precos, noticias
-
 
     def simular_precos(self, historico_ativo):
         retornos_log = np.log(1 + historico_ativo.pct_change())
@@ -156,28 +155,11 @@ class AnalisadorDadosMercado(Ativo):
 st.title("Analisador de Ações")
 
 ticker_interesse = st.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
+periodo_interesse = st.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
 
-# Usar st.columns para organizar os botões horizontalmente
-col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
-
-# Adicionando botões para seleção de períodos predefinidos
-with col1:
-    periodo_opcao_1 = st.button("1m", key='1mo')
-with col2:
-    periodo_opcao_2 = st.button("2m", key='2mo')
-with col3:
-    periodo_opcao_3 = st.button("3m", key='3mo')
-with col4:
-    periodo_opcao_6 = st.button("6m", key='6mo')
-with col5:
-    periodo_opcao_12 = st.button("1y", key='1y')
-with col6:
-    periodo_opcao_24 = st.button("2y", key='2y')
-with col7:
-    periodo_opcao_60 = st.button("5y", key='5y')
-
-    # Adicionando a caixa para um input manual do usuário
-    periodo_interesse = st.text_input("Ou insira manualmente o período desejado para o histórico de preços (ex: 3mo):")
+if st.button("Analisar"):
+    # Criar instância do AnalisadorDadosMercado
+    analisador = AnalisadorDadosMercado()
 
     # Obter dados
     precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
