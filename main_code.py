@@ -155,52 +155,7 @@ class AnalisadorDadosMercado(Ativo):
 st.title("Analisador de Ações")
 
 ticker_interesse = st.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
-
-periodo_opcoes = ["1 mo", "2 mo", "3 mo", "6 mo", "1y", "2y", "3y", "10y", "15y"]
-periodo_interesse = st.radio("Escolha o período desejado:", periodo_opcoes + ["Outro"])
-
-# Campo de entrada manual (exibido/oculto por botão)
-if periodo_interesse == "Outro":
-    periodo_interesse = st.text_input("Insira manualmente o período desejado (ex: 3mo):")
-else:
-# Ajuste do layout para alinhar os botões horizontalmente
-col1, col2, col3 = st.columns(3)
-
-# Exibir botões em colunas
-with col1:
-    st.checkbox("1 mo", value=(periodo_interesse == "1 mo"), key="1mo")
-
-with col2:
-    st.checkbox("2 mo", value=(periodo_interesse == "2 mo"), key="2mo")
-
-with col3:
-    st.checkbox("3 mo", value=(periodo_interesse == "3 mo"), key="3mo")
-
-# Repita o mesmo padrão para os outros períodos
-with col1:
-    st.checkbox("6 mo", value=(periodo_interesse == "6 mo"), key="6mo")
-
-with col2:
-    st.checkbox("1y", value=(periodo_interesse == "1y"), key="1y")
-
-with col3:
-    st.checkbox("2y", value=(periodo_interesse == "2y"), key="2y")
-
-with col1:
-    st.checkbox("3y", value=(periodo_interesse == "3y"), key="3y")
-
-with col2:
-    st.checkbox("10y", value=(periodo_interesse == "10y"), key="10y")
-
-with col3:
-    st.checkbox("15y", value=(periodo_interesse == "15y"), key="15y")
-
-# Adicionando a opção "Outro" na barra lateral
-periodo_interesse = st.sidebar.radio("Escolha o período desejado:", periodo_opcoes + ["Outro"])
-
-# Campo de entrada manual (exibido/oculto por botão)
-if periodo_interesse == "Outro":
-    periodo_interesse = st.sidebar.text_input("Insira manualmente o período desejado (ex: 3mo):")
+periodo_interesse = st.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
 
 if st.button("Analisar"):
     # Criar instância do AnalisadorDadosMercado
@@ -240,4 +195,3 @@ if st.button("Analisar"):
 
     # Plotar gráficos
     analisador.plotar_graficos(precos, caminhos_precos)
-
