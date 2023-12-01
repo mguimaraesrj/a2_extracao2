@@ -76,10 +76,11 @@ class AnalisadorDadosMercado(Ativo):
         results = googlenews.results()
         return results[:num_noticias]
 
-    def baixar_dados(self, ticker, periodo='2mo'):
+        def baixar_dados(self, ticker, periodo='2mo'):
         precos = self.obter_preco(ticker, periodo)
         noticias = self.obter_noticias(ticker)
         return precos, noticias
+
 
     def simular_precos(self, historico_ativo):
         retornos_log = np.log(1 + historico_ativo.pct_change())
@@ -175,19 +176,19 @@ with col6:
 with col7:
     periodo_opcao_60 = st.button("5y", key='5y')
 
-# Adicionando a caixa para um input manual do usuário
-periodo_interesse = st.text_input("Ou insira manualmente o período desejado para o histórico de preços (ex: 3mo):")
+    # Adicionando a caixa para um input manual do usuário
+    periodo_interesse = st.text_input("Ou insira manualmente o período desejado para o histórico de preços (ex: 3mo):")
 
     # Obter dados
-    precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_selecionado)
+    precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
 
     # Simular preços futuros e calcular probabilidade de retorno
     caminhos_precos = analisador.simular_precos(precos)
     prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
 
     # Exibindo resultados e plotando gráficos
-    st.write(f"Histórico de Preços para {ticker_interesse} (últimos {periodo_selecionado}):")
-    st.write(precos.head())
+    st.write(f"Histórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
+    st.write(precos.head()
 
     st.write(f"\nSimulação de Preços Futuros para {ticker_interesse} (dias à frente: {analisador.dias_a_frente}):")
     df_simulacao = pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i+1}' for i in range(analisador.dias_a_frente)])
