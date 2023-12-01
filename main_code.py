@@ -189,7 +189,10 @@ if st.button("Analisar"):
         for i, noticia in enumerate(noticias[:10]):
             st.write(f"\nNotícia {i + 1}")
             st.write(f"Título: {noticia['title']}")
-            st.write(f"Link: {noticia['link']}")
+            
+            # Tornar o link clicável usando st.markdown
+            st.markdown(f"Link: [{noticia['link']}]({noticia['link']})")
+            
             st.write(f"Data: {noticia['date']}")
     else:
         st.write("Nenhuma notícia encontrada para o ticker fornecido.")
