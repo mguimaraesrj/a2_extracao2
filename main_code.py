@@ -155,7 +155,12 @@ class AnalisadorDadosMercado(Ativo):
 st.title("Analisador de Ações")
 
 ticker_interesse = st.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
-periodo_interesse = st.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
+
+# Botões para escolher o período desejado
+periodo_opcoes = ["1 mo", "2 mo", "3 mo", "6 mo", "1y", "2y", "3y", "10y", "15y"]
+periodo_interesse = st.radio("Escolha o período desejado:", periodo_opcoes + ["Outro"])
+if periodo_interesse == "Outro":
+    periodo_interesse = st.text_input("Insira manualmente o período desejado (ex: 3mo):")
 
 if st.button("Analisar"):
     # Criar instância do AnalisadorDadosMercado
