@@ -1,8 +1,4 @@
-# Instalações
-# Instale os pacotes diretamente no ambiente virtual antes de executar o script
-# pip install yfinance GoogleNews statsforecast statsmodels altair
-
-# Bibliotecas Necessárias
+# Importações
 import yfinance as yf
 from GoogleNews import GoogleNews
 import pandas as pd
@@ -11,6 +7,7 @@ from scipy.stats import norm
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from dataclasses import dataclass
 import altair as alt
+import streamlit as st
 
 @dataclass
 class Ativo:
@@ -148,14 +145,12 @@ class AnalisadorDadosMercado(Ativo):
         )
 
         # Exibir os gráficos
-        chart_precos.display()
-        chart_simulacao.display()
-        chart_retornos_simulados.display()
+        st.altair_chart(chart_precos)
+        st.altair_chart(chart_simulacao)
+        st.altair_chart(chart_retornos_simulados)
 
 
 # Exemplo de uso com Streamlit
-import streamlit as st
-
 st.title("Analisador de Ações")
 
 ticker_interesse = st.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
