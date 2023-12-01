@@ -161,7 +161,7 @@ periodo_opcoes = ["1 mo", "2 mo", "3 mo", "6 mo", "1y", "2y", "3y", "10y", "15y"
 periodo_interesse = st.radio("Escolha o período desejado:", periodo_opcoes + ["Outro"])
 
 # Ajuste do layout para alinhar os botões horizontalmente
-col1, col2, col3 = st.beta_columns(3)
+col1, col2, col3 = st.columns(3)
 
 # Exibir botões em colunas
 with col1:
