@@ -173,7 +173,7 @@ if st.sidebar.button("Analisar"):
     st.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%")
 
     # Área exclusiva para notícias
-    with st.beta_expander("Notícias"):
+    with st.expander("Notícias"):
         st.write(f"\nÚltimas Notícias para {ticker_interesse} (Limitadas às últimas 10):")
         noticias = analisador.obter_noticias(ticker_interesse)
         if noticias:
