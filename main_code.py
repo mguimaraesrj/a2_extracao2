@@ -181,7 +181,7 @@ if st.button("Analisar"):
     for i, caminho_preco in enumerate(caminhos_precos):
         st.write(f"\nSimulação {i + 1}")
         df_simulacao = pd.DataFrame(caminho_preco.T, columns=[f'Dia {j + 1}' for j in range(analisador.dias_a_frente)])
-        st.write(df_simulacao)
+        st.write(df_simulacao.head())
 
     st.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%")
 
