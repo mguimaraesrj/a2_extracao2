@@ -197,8 +197,6 @@ with col3:
     st.checkbox("15y", value=(periodo_interesse == "15y"), key="15y")
 
 if st.button("Analisar"):
-    # Restante do código...
-:
     # Criar instância do AnalisadorDadosMercado
     analisador = AnalisadorDadosMercado()
 
