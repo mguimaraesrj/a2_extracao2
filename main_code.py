@@ -169,9 +169,6 @@ if st.button("Analisar"):
     prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
 
     # Exibindo resultados e plotando gráficos
-    st.write(f"Histórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
-    st.write(precos.head())
-
     st.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%")
 
     st.write(f"\nÚltimas Notícias para {ticker_interesse} (Limitadas às últimas 10):")
@@ -186,5 +183,16 @@ if st.button("Analisar"):
             st.markdown(f"Link: [{noticia['link']}]({noticia['link']})")
             
             st.write(f"Data: {noticia['date']}")
-    else:
-        st.write("Nenhuma notícia encontrada para o ticker fornecido.")
+
+    # Plotar gráfico de histórico de preços
+    st.write(f"\nHistórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
+    df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
+    chart_precos = alt.Chart(df_precos).mark_line().encode(
+        x='Data:T',
+        y='Preço de Fechamento:Q'
+    ).properties(
+        width=600,
+        height=400,
+        title=f'Histórico de Preços para {ticker_interesse}'
+    )
+    st.altair_chart(chart_precos)
