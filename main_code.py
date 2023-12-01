@@ -1,6 +1,9 @@
+# Instalações
+# Certifique-se de instalar as bibliotecas necessárias no seu ambiente virtual:
+# pip install yfinance newsapi-python-client statsmodels altair streamlit
+
 # Importações
 import yfinance as yf
-from GoogleNews import GoogleNews
 import pandas as pd
 import numpy as np
 from scipy.stats import norm
@@ -8,6 +11,7 @@ from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from dataclasses import dataclass
 import altair as alt
 import streamlit as st
+from newsapi import NewsApiClient
 
 @dataclass
 class Ativo:
@@ -71,14 +75,19 @@ class AnalisadorDadosMercado(Ativo):
         return precos['Close']
 
     def obter_noticias(self, ticker, num_noticias=10):
-        googlenews = GoogleNews(lang='ptbr', region='BR', period='7d')
-        googlenews.get_news(ticker)
+        # Chave da API do NewsAPI - substitua pela sua própria chave
+        api_key = "5cf8285e8c8a437a87e88657762823c1"
 
-        # Verificar se há resultados antes de retornar
-        if not googlenews.results():
+        # Configurar o cliente do NewsAPI
+        newsapi = NewsApiClient(api_key=api_key)
+
+        # Obter notícias usando o NewsAPI
+        try:
+            noticias = newsapi.get_everything(q=ticker, language='pt', sort_by='publishedAt', page_size=num_noticias)
+            return noticias['articles']
+        except Exception as e:
+            st.warning("Erro ao obter notícias:", e)
             return []
-
-        return googlenews.results()[:num_noticias]
 
     def baixar_dados(self, ticker, periodo='2mo'):
         precos = self.obter_preco(ticker, periodo)
@@ -186,11 +195,11 @@ if st.button("Analisar"):
     noticias = analisador.obter_noticias(ticker_interesse)
     if noticias:
         # Criar lista para exibir notícias
-        for i, noticia in enumerate(noticias):
+        for i, noticia in enumerate(noticias[:10]):
             st.write(f"\nNotícia {i + 1}")
             st.write(f"Título: {noticia['title']}")
-            st.write(f"Link: {noticia['link']}")
-            st.write(f"Data: {noticia['date']}")
+            st.write(f"Link: {noticia['url']}")
+            st.write(f"Data: {noticia['publishedAt']}")
     else:
         st.write("Nenhuma notícia encontrada para o ticker fornecido.")
 
