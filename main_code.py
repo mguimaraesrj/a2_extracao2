@@ -104,52 +104,6 @@ class AnalisadorDadosMercado(Ativo):
         prob = np.mean(over)
         return prob
 
-    def plotar_graficos(self, precos, caminhos_precos):
-        # Gráfico do Histórico de Preços
-        df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
-        chart_precos = alt.Chart(df_precos).mark_line().encode(
-            x='Data:T',
-            y='Preço de Fechamento:Q'
-        ).properties(
-            width=600,
-            height=400,
-            title=f'Histórico de Preços para {self.ticker}'
-        )
-
-        # Gráfico da Simulação de Preços Futuros
-        df_simulacao = pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i + 1}' for i in range(self.dias_a_frente)])
-        df_simulacao['Data'] = precos.index[-1] + pd.to_timedelta(df_simulacao.index, unit='D')
-        df_simulacao = pd.melt(df_simulacao, id_vars=['Data'], var_name='Dia', value_name='Preço de Fechamento Simulado')
-        chart_simulacao = alt.Chart(df_simulacao).mark_line(opacity=0.1, color='blue').encode(
-            x='Data:T',
-            y='Preço de Fechamento Simulado:Q',
-            detail='Dia:N'
-        ).properties(
-            width=600,
-            height=400,
-            title=f'Simulação de Preços Futuros para {self.ticker}'
-        )
-
-        # Gráfico da Distribuição dos Retornos Simulados
-        retornos_simulados = (caminhos_precos[-1] / caminhos_precos[0, 0]) - 1
-        df_retornos_simulados = pd.DataFrame({'Retorno Simulado': retornos_simulados})
-        chart_retornos_simulados = alt.Chart(df_retornos_simulados).mark_bar(
-            color='green',
-            opacity=0.7
-        ).encode(
-            alt.X('Retorno Simulado:Q', bin=alt.Bin(maxbins=30)),
-            alt.Y('count():Q')
-        ).properties(
-            width=600,
-            height=400,
-            title='Distribuição dos Retornos Simulados'
-        )
-
-        # Exibir os gráficos
-        st.altair_chart(chart_precos)
-        st.altair_chart(chart_simulacao)
-        st.altair_chart(chart_retornos_simulados)
-
 
 # Exemplo de uso com Streamlit
 st.sidebar.title("Start Investor")  # Adiciona título à barra lateral
@@ -183,10 +137,10 @@ if st.sidebar.button("Analisar"):
     st.altair_chart(chart_precos)
 
     # Exibir probabilidade na barra lateral
-    st.sidebar.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%")
+    st.sidebar.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico")
 
     # Exibir notícias
-    st.write(f"\nÚltimas Notícias para {ticker_interesse} (Limitadas às últimas 10):")
+    st.write(f"\nÚltimas Notícias para {ticker_interesse}")
     if noticias:
         # Criar lista para exibir notícias
         for i, noticia in enumerate(noticias[:10]):
