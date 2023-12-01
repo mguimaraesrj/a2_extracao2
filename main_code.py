@@ -240,3 +240,4 @@ if st.button("Analisar"):
 
     # Plotar gráficos
     analisador.plotar_graficos(precos, caminhos_precos)
+
