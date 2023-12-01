@@ -157,7 +157,7 @@ st.title("Analisador de Ações")
 ticker_interesse = st.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
 
 # Usar st.beta_columns para organizar os botões horizontalmente
-col1, col2, col3, col4, col5, col6, col7 = st.beta_columns(7)
+col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
 
 # Adicionando botões para seleção de períodos predefinidos
 with col1:
