@@ -156,6 +156,10 @@ st.title("Analisador de Ações")
 
 ticker_interesse = st.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
 
+# Botões para escolher o período desejado
+periodo_opcoes = ["1 mo", "2 mo", "3 mo", "6 mo", "1y", "2y", "3y", "10y", "15y"]
+periodo_interesse = st.radio("Escolha o período desejado:", periodo_opcoes + ["Outro"])
+
 # Ajuste do layout para alinhar os botões horizontalmente
 col1, col2, col3 = st.columns(3)
 
