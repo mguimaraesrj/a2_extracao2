@@ -188,7 +188,7 @@ with col7:
 
     # Exibindo resultados e plotando gráficos
     st.write(f"Histórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
-    st.write(precos.head()
+    st.write(precos.head())
 
     st.write(f"\nSimulação de Preços Futuros para {ticker_interesse} (dias à frente: {analisador.dias_a_frente}):")
     df_simulacao = pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i+1}' for i in range(analisador.dias_a_frente)])
