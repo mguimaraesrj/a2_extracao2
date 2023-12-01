@@ -141,9 +141,11 @@ if st.sidebar.button("Analisar"):
 
 # Exibir notícias
 st.write(f"\nÚltimas Notícias para {ticker_interesse}")
-if noticias:
+if noticias is not None and len(noticias) > 0:
     # Criar lista para exibir notícias
     for i, noticia in enumerate(noticias[:10]):
         st.write(f"\nNotícia {i + 1}")
         st.write(f"Título: [{noticia['title']}]({noticia['link']})")
         st.write(f"Data: {noticia['date']}")
+else:
+    st.write("Nenhuma notícia encontrada.")
