@@ -185,10 +185,12 @@ if st.button("Analisar"):
     st.write(f"\nÚltimas Notícias para {ticker_interesse} (Limitadas às últimas 10):")
     noticias = analisador.obter_noticias(ticker_interesse)
     if noticias:
-        # Criar tabela para exibir notícias
-        noticias_df = pd.DataFrame(noticias)
-        noticias_df['date'] = pd.to_datetime(noticias_df['date']).dt.strftime('%Y-%m-%d %H:%M:%S')
-        st.table(noticias_df[['date', 'title', 'desc', 'link']])
+        # Criar lista para exibir notícias
+        for i, noticia in enumerate(noticias):
+            st.write(f"\nNotícia {i + 1}")
+            st.write(f"Título: {noticia['title']}")
+            st.write(f"Link: {noticia['link']}")
+            st.write(f"Data: {noticia['date']}")
     else:
         st.write("Nenhuma notícia encontrada para o ticker fornecido.")
 
