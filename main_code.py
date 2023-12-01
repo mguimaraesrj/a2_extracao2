@@ -1,7 +1,3 @@
-# Instalações
-# Certifique-se de instalar as bibliotecas necessárias no seu ambiente virtual:
-# pip install yfinance google-news-py statsmodels altair streamlit
-
 # Importações
 import yfinance as yf
 import pandas as pd
@@ -27,21 +23,22 @@ class Ativo:
         return historico_ativo['Close']
 
     @staticmethod
-    def simular_precos(historico_ativo, dias_a_frente, retorno_esperado, num_simulacoes=1000):
-        resultados_simulacao = []
+    def simular_precos(historico_ativo, dias_a_frente, retorno_esperado):
+        retornos_log = np.log(1 + historico_ativo.pct_change())
+        media_retornos = retornos_log.mean()
+        variancia_retornos = retornos_log.var()
+        drift = media_retornos - (0.5 * variancia_retornos)
+        desvio_padrao = retornos_log.std()
 
-        for _ in range(num_simulacoes):
-            retornos_diarios = np.exp(drift + desvio_padrao * norm.ppf(np.random.rand(dias_a_frente)))
+        retornos_diarios = np.exp(drift + desvio_padrao * norm.ppf(np.random.rand(dias_a_frente, dias_a_frente)))
 
-            caminhos_precos = np.zeros((dias_a_frente, dias_a_frente))
-            caminhos_precos[0] = historico_ativo.iloc[-1]
+        caminhos_precos = np.zeros((dias_a_frente, dias_a_frente))
+        caminhos_precos[0] = historico_ativo.iloc[-1]
 
-            for t in range(1, dias_a_frente):
-                caminhos_precos[t] = caminhos_precos[t - 1] * retornos_diarios[t]
+        for t in range(1, dias_a_frente):
+            caminhos_precos[t] = caminhos_precos[t - 1] * retornos_diarios[t]
 
-            resultados_simulacao.append(caminhos_precos)
-
-        return resultados_simulacao
+        return caminhos_precos
 
     @staticmethod
     def calcular_retorno_probabilidade(caminhos_precos, retorno_esperado):
@@ -120,21 +117,18 @@ class AnalisadorDadosMercado(Ativo):
         )
 
         # Gráfico da Simulação de Preços Futuros
-        for i, caminho_preco in enumerate(caminhos_precos):
-            df_simulacao = pd.DataFrame(caminho_preco.T, columns=[f'Dia {j + 1}' for j in range(self.dias_a_frente)])
-            df_simulacao['Data'] = precos.index[-1] + pd.to_timedelta(df_simulacao.index, unit='D')
-            df_simulacao = pd.melt(df_simulacao, id_vars=['Data'], var_name='Dia', value_name=f'Simulação {i + 1}')
-            chart_simulacao = alt.Chart(df_simulacao).mark_line(opacity=0.1, color='blue').encode(
-                x='Data:T',
-                y=f'Simulação {i + 1}:Q',
-                detail='Dia:N'
-            ).properties(
-                width=600,
-                height=400,
-                title=f'Simulação de Preços Futuros para {self.ticker}'
-            )
-            # Exibir os gráficos de simulação
-            st.altair_chart(chart_simulacao)
+        df_simulacao = pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i + 1}' for i in range(self.dias_a_frente)])
+        df_simulacao['Data'] = precos.index[-1] + pd.to_timedelta(df_simulacao.index, unit='D')
+        df_simulacao = pd.melt(df_simulacao, id_vars=['Data'], var_name='Dia', value_name='Preço de Fechamento Simulado')
+        chart_simulacao = alt.Chart(df_simulacao).mark_line(opacity=0.1, color='blue').encode(
+            x='Data:T',
+            y='Preço de Fechamento Simulado:Q',
+            detail='Dia:N'
+        ).properties(
+            width=600,
+            height=400,
+            title=f'Simulação de Preços Futuros para {self.ticker}'
+        )
 
         # Gráfico da Distribuição dos Retornos Simulados
         retornos_simulados = (caminhos_precos[-1] / caminhos_precos[0, 0]) - 1
@@ -153,6 +147,7 @@ class AnalisadorDadosMercado(Ativo):
 
         # Exibir os gráficos
         st.altair_chart(chart_precos)
+        st.altair_chart(chart_simulacao)
         st.altair_chart(chart_retornos_simulados)
 
 
@@ -178,10 +173,8 @@ if st.button("Analisar"):
     st.write(precos.head())
 
     st.write(f"\nSimulação de Preços Futuros para {ticker_interesse} (dias à frente: {analisador.dias_a_frente}):")
-    for i, caminho_preco in enumerate(caminhos_precos):
-        st.write(f"\nSimulação {i + 1}")
-        df_simulacao = pd.DataFrame(caminho_preco.T, columns=[f'Dia {j + 1}' for j in range(analisador.dias_a_frente)])
-        st.write(df_simulacao.head())
+    df_simulacao = pd.DataFrame(caminhos_precos.T, columns=[f'Dia {i+1}' for i in range(analisador.dias_a_frente)])
+    st.write(df_simulacao.head())
 
     st.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%")
 
@@ -192,7 +185,10 @@ if st.button("Analisar"):
         for i, noticia in enumerate(noticias[:10]):
             st.write(f"\nNotícia {i + 1}")
             st.write(f"Título: {noticia['title']}")
+            
+            # Tornar o link clicável usando st.markdown
             st.markdown(f"Link: [{noticia['link']}]({noticia['link']})")
+            
             st.write(f"Data: {noticia['date']}")
     else:
         st.write("Nenhuma notícia encontrada para o ticker fornecido.")
