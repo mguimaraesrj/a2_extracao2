@@ -160,6 +160,10 @@ ticker_interesse = st.text_input("Insira o ticker de interesse (ex: MGLU3):").up
 periodo_opcoes = ["1 mo", "2 mo", "3 mo", "6 mo", "1y", "2y", "3y", "10y", "15y"]
 periodo_interesse = st.radio("Escolha o período desejado:", periodo_opcoes + ["Outro"])
 
+# Campo de entrada manual (exibido/oculto por botão)
+if periodo_interesse == "Outro":
+    periodo_interesse = st.text_input("Insira manualmente o período desejado (ex: 3mo):")
+
 # Ajuste do layout para alinhar os botões horizontalmente
 col1, col2, col3 = st.columns(3)
 
@@ -191,12 +195,6 @@ with col2:
 
 with col3:
     st.checkbox("15y", value=(periodo_interesse == "15y"), key="15y")
-
-# Campo de entrada manual (exibido/oculto por botão)
-if periodo_interesse == "Outro":
-    show_manual_input = st.button("Inserir manualmente")
-    if show_manual_input:
-        periodo_interesse = st.text_input("Insira manualmente o período desejado (ex: 3mo):")
 
 if st.button("Analisar"):
     # Criar instância do AnalisadorDadosMercado
