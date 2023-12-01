@@ -156,10 +156,24 @@ st.title("Analisador de Ações")
 
 ticker_interesse = st.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
 
+# Usar st.beta_columns para organizar os botões horizontalmente
+col1, col2, col3, col4, col5, col6, col7 = st.beta_columns(7)
+
 # Adicionando botões para seleção de períodos predefinidos
-periodo_opcoes = st.radio("Selecione o período de histórico desejado:",
-                          ["1mo", "3mo", "6mo", "1y", "2y", "5y", "Max"],
-                          index=3)  # Index 3 corresponde a "1y" como opção padrão
+with col1:
+    periodo_opcao_1 = st.button("1m", key='1m')
+with col2:
+    periodo_opcao_3 = st.button("3m", key='3m')
+with col3:
+    periodo_opcao_6 = st.button("6m", key='6m')
+with col4:
+    periodo_opcao_1y = st.button("1y", key='1y')
+with col5:
+    periodo_opcao_2y = st.button("2y", key='2y')
+with col6:
+    periodo_opcao_5y = st.button("5y", key='5y')
+with col7:
+    periodo_opcao_max = st.button("Max", key='max')
 
 # Adicionando a caixa para um input manual do usuário
 periodo_interesse = st.text_input("Ou insira manualmente o período desejado para o histórico de preços (ex: 3mo):")
@@ -172,8 +186,24 @@ if st.button("Analisar"):
     # Criar instância do AnalisadorDadosMercado
     analisador = AnalisadorDadosMercado()
 
-    # Utilizar o período selecionado ou inserido manualmente
-    periodo_selecionado = periodo_opcoes if not periodo_interesse else periodo_interesse.strip()
+    # Determinar o período com base nos botões pressionados
+    if periodo_opcao_1:
+        periodo_selecionado = "1mo"
+    elif periodo_opcao_3:
+        periodo_selecionado = "3mo"
+    elif periodo_opcao_6:
+        periodo_selecionado = "6mo"
+    elif periodo_opcao_1y:
+        periodo_selecionado = "1y"
+    elif periodo_opcao_2y:
+        periodo_selecionado = "2y"
+    elif periodo_opcao_5y:
+        periodo_selecionado = "5y"
+    elif periodo_opcao_max:
+        periodo_selecionado = "Max"
+    else:
+        # Se nenhum botão for pressionado, usar a entrada manual
+        periodo_selecionado = periodo_interesse.strip()
 
     # Obter dados
     precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_selecionado)
