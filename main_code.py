@@ -139,13 +139,15 @@ if st.sidebar.button("Analisar"):
     # Exibir probabilidade na barra lateral
     st.sidebar.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico")
 
-# Exibir notícias
-st.write(f"\nÚltimas Notícias para {ticker_interesse}")
-if noticias is not None and len(noticias) > 0:
-    # Criar lista para exibir notícias
-    for i, noticia in enumerate(noticias[:10]):
-        st.write(f"\nNotícia {i + 1}")
-        st.write(f"Título: [{noticia['title']}]({noticia['link']})")
-        st.write(f"Data: {noticia['date']}")
-else:
-    st.write("Nenhuma notícia encontrada.")
+    # Exibir notícias
+    st.write(f"\nÚltimas Notícias para {ticker_interesse}")
+    if noticias:
+        # Criar lista para exibir notícias
+        for i, noticia in enumerate(noticias[:10]):
+            st.write(f"\nNotícia {i + 1}")
+            st.write(f"Título: {noticia['title']}")
+            
+            # Tornar o link clicável usando st.markdown
+            st.markdown(f"Link: [{noticia['link']}]({noticia['link']})")
+            
+            st.write(f"Data: {noticia['date']}")
