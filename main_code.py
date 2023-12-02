@@ -150,9 +150,17 @@ else:
     numero_periodo = st.sidebar.number_input("Escolha o número de anos (1-10):", min_value=1, max_value=10)
     periodo_interesse = f"{numero_periodo}y"
 
+# Restante do código permanece igual
+if st.sidebar.button("Analisar"):
+    try:
+        # Criar instância do AnalisadorDadosMercado
+        analisador = AnalisadorDadosMercado(days_ahead=numero_periodo)
+
+        # Obter dados
+        precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
 
         # Verificar se os dados foram obtidos corretamente
-            if precos is None or noticias is None:
+        if precos is None or noticias is None:
             st.sidebar.error("Não foi possível obter dados para o ativo selecionado. Tente novamente mais tarde.")
         else:
             # Simular preços futuros e calcular probabilidade de retorno
@@ -184,3 +192,4 @@ else:
 
     except Exception as e:
         st.sidebar.error("Não foi possível realizar o cálculo para o ativo selecionado no momento. Tente novamente mais tarde.")
+
