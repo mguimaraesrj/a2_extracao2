@@ -123,34 +123,18 @@ if st.sidebar.button("Analisar"):
     caminhos_precos = analisador.simular_precos(precos)
     prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
 
-    # Plotar gráfico de histórico de preços
-    st.write(f"\nHistórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
-    df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
-    chart_precos = alt.Chart(df_precos).mark_line().encode(
-        x='Data:T',
-        y='Preço de Fechamento:Q'
-    ).properties(
-        width=600,
-        height=400,
-        title=f'Histórico de Preços para {ticker_interesse}'
-    )
-    st.altair_chart(chart_precos)
-
-    # Exibir probabilidade na barra lateral
-    st.sidebar.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico")
-
-    # Exibir notícias
-    st.write(f"\nÚltimas Notícias para {ticker_interesse}")
-    if noticias:
-        # Criar lista para exibir notícias
-        for i, noticia in enumerate(noticias[:10]):
-            st.write(f"\nNotícia {i + 1}")
-            st.write(f"Título: {noticia['title']}")
-            
-            # Tornar o link clicável usando st.markdown
-            st.markdown(f"Link: [{noticia['link']}]({noticia['link']})")
-            
-            st.write(f"Data: {noticia['date']}")
+# Plotar gráfico de histórico de preços
+st.write(f"\nHistórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
+df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
+chart_precos = alt.Chart(df_precos).mark_line().encode(
+    x='Data:T',
+    y='Preço de Fechamento:Q'
+).properties(
+    width=600,
+    height=400,
+    title=f'Histórico de Preços para {ticker_interesse}'
+)
+st.altair_chart(chart_precos)
 
 # Botão para exibir as últimas notícias
 if st.button("Ver Últimas Notícias"):
