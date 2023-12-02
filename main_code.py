@@ -183,7 +183,7 @@ if st.sidebar.button("Analisar"):
             mostrar_tabela = st.checkbox("Mostrar Tabela de Histórico de Preços")
 
             # Exibe a tabela apenas se o botão estiver marcado
-            if mostrar_tabela
+            if mostrar_tabela:
                 st.write("**Tabela de Histórico de Preços**")
                 st.dataframe(df_precos)
 
