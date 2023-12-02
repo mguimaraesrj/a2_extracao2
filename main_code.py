@@ -148,6 +148,8 @@ if st.sidebar.button("Analisar"):
     caminhos_precos = analisador.simular_precos(precos)
     prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
 
+    st.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico.")
+
     # Plotar gráfico de histórico de preços
     df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
     chart_precos = alt.Chart(df_precos).mark_line().encode(
@@ -159,9 +161,6 @@ if st.sidebar.button("Analisar"):
         title=f'Histórico de Preços para {ticker_interesse}'
     )
     st.altair_chart(chart_precos)
-
-    # Exibir probabilidade na barra lateral
-    st.sidebar.markdown(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico.")
 
     # Exibir títulos e links das notícias
     st.markdown(f"\nÚltimas Notícias para {ticker_interesse}")
