@@ -116,6 +116,8 @@ st.sidebar.markdown("# Start Investor 📈")  # Adiciona título à barra latera
 ticker_interesse = st.sidebar.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
 periodo_interesse = st.sidebar.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
 
+st.sidebar.mardown("Este dashboard foi desenvolvido como trabalho final da disciplina de Extração e Análise de Dados, na graduação em Comunicação Digital da FGV ECMI, sob orientação do prof. Matheus Pestana. Nosso objetivo é proporcionar ao usuário (investidor pessoa física) uma análise sobre um ativo do seu interesse na B3. Através de nossa plataforma, o usuário consegue ter acesso à informações como: Histórico de  Preços, Probabilidade de Retorno (MBG) e notícias relacionadas ao ativo. Membros do grupo: Lavínia Zactiti, Luana Moura, Matheus Guimarães e Nataly Abreu.")
+
 if st.sidebar.button("Analisar"):
     # Criar instância do AnalisadorDadosMercado
     analisador = AnalisadorDadosMercado()
@@ -150,5 +152,3 @@ if st.sidebar.button("Analisar"):
             link_parts = noticia['link'].split('/~/+/')
             link = link_parts[1] if len(link_parts) > 1 else noticia['link']  # Se o padrão não estiver presente, use o link original
             st.markdown(f"- [{noticia['title']}]({link})", unsafe_allow_html=True)
-st.sidebar.mardown("Este dashboard foi desenvolvido como trabalho final da disciplina de Extração e Análise de Dados, na graduação em Comunicação Digital da FGV ECMI, sob orientação do prof. Matheus Pestana. Nosso objetivo é proporcionar ao usuário (investidor pessoa física) uma análise sobre um ativo do seu interesse na B3. Através de nossa plataforma, o usuário consegue ter acesso à informações como: Histórico de  Preços, Probabilidade de Retorno (MBG) e notícias relacionadas ao ativo. Membros do grupo: Lavínia Zactiti, Luana Moura, Matheus Guimarães e Nataly Abreu.")
-
