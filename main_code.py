@@ -13,9 +13,13 @@ from GoogleNews import GoogleNews
 st.write("## Bem-vindo ao Start Investor")
 st.write("###### Faça a sua consulta para otimizar seu tempo e aprimorar seu processo de análise.")
 
-file_path = "acoes-listadas.csv"
-df = pd.read_csv(file_path)
-st.table(df)
+dados = [
+    {"Código": "MGLU3", "Nome": "Magazine Luiza"},
+    {"Código": "HAPV3", "Nome": "Hapvida"},
+    # ... Adicione os demais dados aqui
+    {"Código": "MMAQ4", "Nome": "Minasmáquinas"}
+]
+st.table(dados)
 
 
 
