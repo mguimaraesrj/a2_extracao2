@@ -125,31 +125,35 @@ if st.sidebar.button("Analisar"):
 
 # Plotar gráfico de histórico de preços
 st.write(f"\nHistórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
-df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
-chart_precos = alt.Chart(df_precos).mark_line().encode(
-    x='Data:T',
-    y='Preço de Fechamento:Q'
-).properties(
-    width=600,
-    height=400,
-    title=f'Histórico de Preços para {ticker_interesse}'
-)
-st.altair_chart(chart_precos)
 
-# Botão para exibir as últimas notícias
-if st.button("Ver Últimas Notícias"):
-    # Obter notícias
-    noticias = analisador.obter_noticias(ticker_interesse)
+try:
+    df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
+    chart_precos = alt.Chart(df_precos).mark_line().encode(
+        x='Data:T',
+        y='Preço de Fechamento:Q'
+    ).properties(
+        width=600,
+        height=400,
+        title=f'Histórico de Preços para {ticker_interesse}'
+    )
+    st.altair_chart(chart_precos)
 
-    # Exibir notícias
-    st.write(f"\nÚltimas Notícias para {ticker_interesse}")
-    if noticias:
-        # Criar lista para exibir notícias
-        for i, noticia in enumerate(noticias[:10]):
-            st.write(f"\nNotícia {i + 1}")
-            st.write(f"Título: {noticia['title']}")
-            
-            # Tornar o link clicável usando st.markdown
-            st.markdown(f"Link: [{noticia['link']}]({noticia['link']})")
-            
-            st.write(f"Data: {noticia['date']}")
+    # Botão para exibir as últimas notícias
+    if st.button("Ver Últimas Notícias"):
+        # Obter notícias
+        noticias = analisador.obter_noticias(ticker_interesse)
+
+        # Exibir notícias
+        st.write(f"\nÚltimas Notícias para {ticker_interesse}")
+        if noticias:
+            # Criar lista para exibir notícias
+            for i, noticia in enumerate(noticias[:10]):
+                st.write(f"\nNotícia {i + 1}")
+                st.write(f"Título: {noticia['title']}")
+                
+                # Tornar o link clicável usando st.markdown
+                st.markdown(f"Link: [{noticia['link']}]({noticia['link']})")
+                
+                st.write(f"Data: {noticia['date']}")
+except Exception as e:
+    st.error(f"Erro ao processar dados: {str(e)}")
