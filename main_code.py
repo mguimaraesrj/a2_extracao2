@@ -147,7 +147,7 @@ elif periodo_opcao == "Meses":
     numero_periodo = st.sidebar.number_input("Escolha o número de meses (1-12):", min_value=1, max_value=12)
     periodo_interesse = f"{numero_periodo}mo"
 else:
-    numero_periodo = st.sidebar.number_input("Escolha o número de anos (1-10):", min_value=1, max_value=10)
+    numero_periodo = st.sidebar.number_input("Escolha o número de anos:", min_value=1, max_value=1000)
     periodo_interesse = f"{numero_periodo}y"
 
 # Restante do código permanece igual
