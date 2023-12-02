@@ -112,7 +112,11 @@ st.sidebar.title("Start Investor")  # Adiciona título à barra lateral
 ticker_interesse = st.sidebar.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
 periodo_interesse = st.sidebar.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
 
-if st.sidebar.button("Analisar"):
+# Adicionar botão para controlar a exibição das notícias
+show_noticias = st.sidebar.button("Analisar")
+
+# Exibir notícias
+if show_noticias:
     # Criar instância do AnalisadorDadosMercado
     analisador = AnalisadorDadosMercado()
 
@@ -136,18 +140,10 @@ if st.sidebar.button("Analisar"):
     )
     st.altair_chart(chart_precos)
 
-    # Adicionar botão para controlar a exibição das notícias
-    show_noticias = st.button("Mostrar Últimas Notícias")
-
     # Exibir probabilidade na barra lateral
     st.sidebar.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico")
 
-    # Se o botão for pressionado, salvar o estado atual e reiniciar a execução
-    if show_noticias:
-        st.experimental_rerun()
-
-# Exibir notícias
-if show_noticias:
+    # Exibir notícias
     st.write(f"\nÚltimas Notícias para {ticker_interesse}")
     if noticias:
         # Criar lista para exibir notícias
