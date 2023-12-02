@@ -179,10 +179,10 @@ if st.sidebar.button("Analisar"):
             )
             st.altair_chart(chart_precos)
             # Adiciona um botão de alternância para mostrar/ocultar a tabela de histórico de preços
-            mostrar_tabela = st.checkbox("Mostrar Tabela de Histórico de Preços")
+            mostrar_tabela_precos = st.checkbox("Mostrar Tabela de Histórico de Preços")
 
             # Exibe a tabela apenas se o botão estiver marcado
-            if mostrar_tabela:
+            if mostrar_tabela_precos:
                 st.write("**Tabela de Histórico de Preços**")
                 st.table(df_precos)
 
