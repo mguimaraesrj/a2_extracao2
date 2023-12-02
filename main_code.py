@@ -178,15 +178,13 @@ if st.sidebar.button("Analisar"):
                 title=f'Histórico de Preços para {ticker_interesse}'
             )
             st.altair_chart(chart_precos)
-            # Adiciona um botão para mostrar a tabela de histórico de preços
-            if st.button("Mostrar Tabela de Histórico de Preços", key="mostrar_tabela"):
+            # Adiciona um botão de alternância para mostrar/ocultar a tabela de histórico de preços
+            mostrar_tabela = st.checkbox("Mostrar Tabela de Histórico de Preços")
+
+            # Exibe a tabela apenas se o botão estiver marcado
+            if mostrar_tabela:
                 st.write("**Tabela de Histórico de Preços**")
-            
-                # Use st.empty() para criar um espaço reservado para a tabela
-                tabela_placeholder = st.empty()
-            
-                # Mostre a tabela no espaço reservado
-                tabela_placeholder.table(df_precos)
+                st.table(df_precos)
 
 
             st.write(f"**Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%:{prob_retorno*100:.2f}% (MBG)**")
