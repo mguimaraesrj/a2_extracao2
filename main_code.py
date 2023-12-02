@@ -179,15 +179,16 @@ if st.sidebar.button("Analisar"):
             )
             st.altair_chart(chart_precos)
 
-            
+            # Adiciona um botão de alternância para mostrar/ocultar a tabela de tickers
+            mostrar_tabela_precos = st.sidebar.checkbox("Ver tabela Histórico de Preços", True)
 
-            # Exibe a tabela apenas se o botão estiver marcado
-            if mostrar_tabela:
+            # Exibe o DataFrame filtrado no Streamlit apenas se o botão estiver marcado
+            if mostrar_tabela_precos:
                 st.write("**Tabela de Histórico de Preços**")
-                st.dataframe(df_precos)
+                st.table(df_precos)
 
-            # Adiciona um botão de alternância para mostrar/ocultar a tabela de histórico de preços
-            mostrar_tabela = st.checkbox("Mostrar Tabela de Histórico de Preços")
+            
+            
 
 
             st.write(f"**Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%:{prob_retorno*100:.2f}% (MBG)**")
