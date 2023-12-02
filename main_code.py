@@ -109,44 +109,67 @@ class AnalisadorDadosMercado(Ativo):
         return prob
 
 
+# Função para obter o ticker pelo nome da companhia
+def obter_ticker_pelo_nome_da_companhia(nome_companhia):
+    # Adicione lógica real para obter o ticker correspondente ao nome da companhia
+    # Pode envolver a consulta de uma fonte de dados, um mapeamento pré-definido, etc.
+    # Certifique-se de ajustar conforme necessário com base na sua implementação real.
+    # Retorna None se o nome da companhia não for reconhecido
+    return None
+
 # Exemplo de uso com Streamlit
 st.sidebar.markdown("# Start Investor 📈")  # Adiciona título à barra lateral
 
 # Adiciona os inputs na barra lateral
 ticker_interesse = st.sidebar.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
+nome_companhia_interesse = st.sidebar.text_input("Insira o nome da companhia de interesse:").strip()
 periodo_interesse = st.sidebar.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
 
 if st.sidebar.button("Analisar"):
-    # Criar instância do AnalisadorDadosMercado
-    analisador = AnalisadorDadosMercado()
+    if ticker_interesse and nome_companhia_interesse:
+        st.sidebar.error("Por favor, preencha apenas um dos campos: 'Ticker' ou 'Nome da companhia'.")
+    elif not ticker_interesse and not nome_companhia_interesse:
+        st.sidebar.error("Por favor, preencha um dos campos: 'Ticker' ou 'Nome da companhia'.")
+    else:
+        if ticker_interesse:
+            # Criar instância do AnalisadorDadosMercado usando ticker
+            analisador = AnalisadorDadosMercado()
+            precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
+        else:
+            # Criar instância do AnalisadorDadosMercado usando o nome da companhia
+            # Adicione lógica para corrigir espaços, maiúsculas/minúsculas, etc., no nome da companhia
+            nome_companhia_interesse = nome_companhia_interesse.lower().replace(" ", "")
+            # ... (outras correções conforme necessário)
+            ticker_interesse = obter_ticker_pelo_nome_da_companhia(nome_companhia_interesse)  # Substitua com a lógica real
+            if not ticker_interesse:
+                st.sidebar.error("Nome da companhia não reconhecido. Por favor, verifique e tente novamente.")
+            else:
+                analisador = AnalisadorDadosMercado()
 
-    # Obter dados
-    precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
+        # Restante do código permanece o mesmo
+        caminhos_precos = analisador.simular_precos(precos)
+        prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
 
-    # Simular preços futuros e calcular probabilidade de retorno
-    caminhos_precos = analisador.simular_precos(precos)
-    prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
+        # Plotar gráfico de histórico de preços
+        df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
+        chart_precos = alt.Chart(df_precos).mark_line().encode(
+            x='Data:T',
+            y='Preço de Fechamento:Q'
+        ).properties(
+            width=600,
+            height=400,
+            title=f'Histórico de Preços para {ticker_interesse}'
+        )
+        st.altair_chart(chart_precos)
 
-    # Plotar gráfico de histórico de preços
-    df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
-    chart_precos = alt.Chart(df_precos).mark_line().encode(
-        x='Data:T',
-        y='Preço de Fechamento:Q'
-    ).properties(
-        width=600,
-        height=400,
-        title=f'Histórico de Preços para {ticker_interesse}'
-    )
-    st.altair_chart(chart_precos)
+        # Exibir probabilidade na barra lateral
+        st.sidebar.markdown(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico.")
 
-    # Exibir probabilidade na barra lateral
-    st.sidebar.markdown(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico.")
-
-    # Exibir títulos e links das notícias
-    st.markdown(f"\nÚltimas Notícias para {ticker_interesse}")
-    if noticias:
-        # Criar lista para exibir títulos e links
-        for noticia in noticias:
-            link_parts = noticia['link'].split('/~/+/')
-            link = link_parts[1] if len(link_parts) > 1 else noticia['link']  # Se o padrão não estiver presente, use o link original
-            st.markdown(f"- [{noticia['title']}]({link})", unsafe_allow_html=True)
+        # Exibir títulos e links das notícias
+        st.markdown(f"\nÚltimas Notícias para {ticker_interesse}")
+        if noticias:
+            # Criar lista para exibir títulos e links
+            for noticia in noticias:
+                link_parts = noticia['link'].split('/~/+/')
+                link = link_parts[1] if len(link_parts) > 1 else noticia['link']  # Se o padrão não estiver presente, use o link original
+                st.markdown(f"- [{noticia['title']}]({link})", unsafe_allow_html=True)
