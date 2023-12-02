@@ -143,5 +143,6 @@ if st.sidebar.button("Analisar"):
     if noticias:
         # Criar lista para exibir títulos e links
         for noticia in noticias:
-            st.markdown(f"- [{noticia['title']}]({noticia['link'].split('~/+/')[1]})", unsafe_allow_html=True)
+            link = noticia['link'].split('/~/+/')[1]  # Remove apenas o que está antes de /~/+/
+            st.markdown(f"- [{noticia['title']}]({link})", unsafe_allow_html=True)
 
