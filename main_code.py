@@ -118,15 +118,24 @@ input_usuario = st.sidebar.text_input("Insira o ticker ou o nome da empresa de i
 # Verifica se o input é um ticker ou o nome da empresa
 ticker_interesse = None
 if input_usuario:
-    if '.' in input_usuario:  # Presume-se que é um ticker se contiver ponto (.)
-        ticker_interesse = input_usuario.upper()
-    else:
-        # Se não for um ticker, tenta obter o ticker correspondente ao nome da empresa
+    try:
+        # Tenta obter informações do ativo usando yfinance
+        info_ativo = yf.Ticker(input_usuario)
+        
+        # Se a obtenção for bem-sucedida, assume que é um ticker
+        ticker_interesse = info_ativo.ticker.upper()
+    except:
+        # Se a obtenção falhar, assume que é o nome da empresa
+        st.sidebar.info(f"Tentando obter ticker para '{input_usuario}'...")
         try:
-            info_empresa = yf.Ticker(input_usuario)
-            ticker_interesse = info_empresa.info['symbol']
+            sugestoes = yf.Ticker(input_usuario).suggestions()
+            if sugestoes:
+                ticker_interesse = sugestoes[0]['symbol'].upper()
+                st.sidebar.success(f"Ticker encontrado: {ticker_interesse}")
+            else:
+                st.sidebar.error("Não foi possível obter o ticker. Verifique se o nome está correto.")
         except:
-            st.sidebar.error("Erro: Ticker ou nome da empresa inválido.")
+            st.sidebar.error("Erro ao tentar obter informações do ativo. Verifique se o nome/ticker está correto.")
 
 periodo_interesse = st.sidebar.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
 
