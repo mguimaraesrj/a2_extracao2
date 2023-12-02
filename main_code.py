@@ -138,36 +138,45 @@ ticker_interesse = st.sidebar.text_input("Insira o ticker de interesse (ex: MGLU
 periodo_interesse = st.sidebar.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
 
 if st.sidebar.button("Analisar"):
-    # Criar instância do AnalisadorDadosMercado
-    analisador = AnalisadorDadosMercado()
+    try:
+        # Criar instância do AnalisadorDadosMercado
+        analisador = AnalisadorDadosMercado()
 
-    # Obter dados
-    precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
+        # Obter dados
+        precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
 
-    # Simular preços futuros e calcular probabilidade de retorno
-    caminhos_precos = analisador.simular_precos(precos)
-    prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
+        # Verificar se os dados foram obtidos corretamente
+        if precos is None or noticias is None:
+            st.sidebar.error("Não foi possível obter dados para o ativo selecionado. Tente novamente mais tarde.")
+        else:
+            # Simular preços futuros e calcular probabilidade de retorno
+            caminhos_precos = analisador.simular_precos(precos)
+            prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
 
-    # Plotar gráfico de histórico de preços
-    df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
-    chart_precos = alt.Chart(df_precos).mark_line().encode(
-        x='Data:T',
-        y='Preço de Fechamento:Q'
-    ).properties(
-        width=600,
-        height=400,
-        title=f'Histórico de Preços para {ticker_interesse}'
-    )
-    st.altair_chart(chart_precos)
+            # Plotar gráfico de histórico de preços
+            df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
+            chart_precos = alt.Chart(df_precos).mark_line().encode(
+                x='Data:T',
+                y='Preço de Fechamento:Q'
+            ).properties(
+                width=600,
+                height=400,
+                title=f'Histórico de Preços para {ticker_interesse}'
+            )
+            st.altair_chart(chart_precos)
 
-    # Exibir probabilidade na barra lateral
-    st.sidebar.markdown(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico.")
+            # Exibir probabilidade na barra lateral
+            st.sidebar.markdown(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico.")
 
-    # Exibir títulos e links das notícias
-    st.markdown(f"\nÚltimas Notícias para {ticker_interesse}")
-    if noticias:
-        # Criar lista para exibir títulos e links
-        for noticia in noticias:
-            link_parts = noticia['link'].split('/~/+/')
-            link = link_parts[1] if len(link_parts) > 1 else noticia['link']  # Se o padrão não estiver presente, use o link original
-            st.markdown(f"- [{noticia['title']}]({link})", unsafe_allow_html=True)
+            # Exibir títulos e links das notícias
+            st.markdown(f"\nÚltimas Notícias para {ticker_interesse}")
+            if noticias:
+                # Criar lista para exibir títulos e links
+                for noticia in noticias:
+                    link_parts = noticia['link'].split('/~/+/')
+                    link = link_parts[1] if len(link_parts) > 1 else noticia['link']  # Se o padrão não estiver presente, use o link original
+                    st.markdown(f"- [{noticia['title']}]({link})", unsafe_allow_html=True)
+
+    except Exception as e:
+        st.sidebar.error("Não foi possível realizar o cálculo para o ativo selecionado no momento. Tente novamente mais tarde.")
+        # Opcional: você pode imprimir informações de depuração usando print(e) ou st.error(str(e))
