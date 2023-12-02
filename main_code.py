@@ -131,17 +131,16 @@ if st.sidebar.button("Analisar"):
     ).properties(
         width=600,
         height=400,
-        title=f'**Histórico de Preços para {ticker_interesse}**'
+        title=f'Histórico de Preços para {ticker_interesse}'
     )
     st.altair_chart(chart_precos)
 
     # Exibir probabilidade na barra lateral
-    st.sidebar.markdown(f"\n**Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%:** {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico")
+    st.sidebar.markdown(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico")
 
-    # Exibir manchetes das notícias
-    st.markdown(f"\n**Últimas Notícias para {ticker_interesse}**")
+    # Exibir títulos das notícias
+    st.markdown(f"\nÚltimas Notícias para {ticker_interesse}")
     if noticias:
-        # Criar lista para exibir manchetes
-        for noticia in noticias[:10]:
-            st.markdown(f"\n- {noticia['title']}")
-            st.markdown(f"   [Link]({noticia['link']})")
+        # Criar lista para exibir títulos
+        for noticia in noticias:
+            st.markdown(f"- **{noticia['title']}**")
