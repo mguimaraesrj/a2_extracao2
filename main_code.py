@@ -143,6 +143,6 @@ if st.sidebar.button("Analisar"):
     if noticias:
         # Criar lista para exibir títulos e links
         for noticia in noticias:
-            link = noticia['link'].split('/~/+/')[1]  # Remove apenas o que está antes de /~/+/
+            link_parts = noticia['link'].split('/~/+/')
+            link = link_parts[1] if len(link_parts) > 1 else noticia['link']  # Se o padrão não estiver presente, use o link original
             st.markdown(f"- [{noticia['title']}]({link})", unsafe_allow_html=True)
-
