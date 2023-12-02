@@ -19,7 +19,19 @@ dados = [
     # ... Adicione os demais dados aqui
     {"Código": "MMAQ4", "Nome": "Minasmáquinas"}
 ]
-st.table(dados)
+
+# Transforma a lista de dicionários em um DataFrame
+df = pd.DataFrame(dados)
+
+# Adiciona uma barra lateral para filtrar os dados
+filtro_codigo = st.sidebar.text_input("Filtrar por Código:", "")
+filtro_nome = st.sidebar.text_input("Filtrar por Nome:", "")
+
+# Aplica os filtros
+df_filtrado = df[df["Código"].str.contains(filtro_codigo) & df["Nome"].str.contains(filtro_nome, case=False)]
+
+# Exibe o DataFrame filtrado no Streamlit
+st.table(df_filtrado)
 
 
 
