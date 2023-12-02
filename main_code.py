@@ -11,7 +11,7 @@ from GoogleNews import GoogleNews
 
 # Breve descrição sobre o projeto
 st.write("## Bem-vindo ao Start Investor")
-st.write("###### Faça a sua consulta para otimizar seu tempo e aprimorar seu processo de análise. Selecione o ticker do seu ativo de interesse e veja as informações relacionadas a companhia.")
+st.write("Faça a sua consulta para otimizar seu tempo e aprimorar seu processo de análise. Selecione o ticker do seu ativo de interesse e veja as informações relacionadas a companhia.")
 
 st.sidebar.markdown("# Start Investor 📈")  # Adiciona título à barra lateral
 
@@ -29,7 +29,7 @@ df_filtrado = df[df["Código"].str.contains(filtro_codigo) & df["Nome"].str.cont
 
 # Exibe o DataFrame filtrado no Streamlit
 
-st.write("Não sabe o ticker da companhia que está analisando? Basta filtrar a tabela.")
+st.write("###### Não sabe o ticker da companhia que está analisando? Basta filtrar a tabela.")
 st.table(df_filtrado)
 
 
