@@ -194,10 +194,10 @@ if st.sidebar.button("Analisar"):
                 # Criar lista para exibir títulos e links
                 for noticia in noticias:
                     # Exiba o título da notícia
-        st.write(f"- {noticia['title']}")
-
-        # Exiba o link da notícia abaixo do título
-        st.write(f"  {noticia['link']}")
+                    st.write(f"- {noticia['title']}")
+            
+                    # Exiba o link da notícia abaixo do título
+                    st.write(f"  {noticia['link']}")
 
     except Exception as e:
         st.sidebar.error("Não foi possível realizar o cálculo para o ativo selecionado no momento. Tente novamente mais tarde.")
