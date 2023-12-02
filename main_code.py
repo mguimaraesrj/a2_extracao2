@@ -106,7 +106,7 @@ class AnalisadorDadosMercado(Ativo):
 
 
 # Exemplo de uso com Streamlit
-st.sidebar.title("Start Investor")  # Adiciona título à barra lateral
+st.sidebar.title("Start Investor 📈")  # Adiciona título à barra lateral
 
 # Adiciona os inputs na barra lateral
 ticker_interesse = st.sidebar.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
