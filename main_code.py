@@ -25,7 +25,7 @@ filtro_codigo = st.sidebar.text_input("Filtrar a tabela por Ticker:", "")
 
 
 # Aplica os filtros
-df_filtrado = df[df["Ticker"].str.contains(filtro_codigo) & df["Nome"].str.contains(filtro_nome, case=False)]
+df_filtrado = df[df["Ticker"].str.contains(filtro_codigo) & df["Empresa"].str.contains(filtro_nome, case=False)]
 
 # Adiciona um botão de alternância para mostrar/ocultar a tabela de tickers
 mostrar_tabela = st.sidebar.checkbox("Mostrar Tabela de Tickers", True)
