@@ -29,7 +29,7 @@ df_filtrado = df[df["Código"].str.contains(filtro_codigo) & df["Nome"].str.cont
 
 # Exibe o DataFrame filtrado no Streamlit
 
-st.write(Não sabe o ticker da companhia que está analisando? Basta filtrar a tabela.")
+st.write("Não sabe o ticker da companhia que está analisando? Basta filtrar a tabela.")
 st.table(df_filtrado)
 
 
