@@ -112,11 +112,7 @@ st.sidebar.title("Start Investor")  # Adiciona título à barra lateral
 ticker_interesse = st.sidebar.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
 periodo_interesse = st.sidebar.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
 
-# Adicionar botão para controlar a exibição das notícias
-show_noticias = st.sidebar.button("Analisar")
-
-# Exibir notícias
-if show_noticias:
+if st.sidebar.button("Analisar"):
     # Criar instância do AnalisadorDadosMercado
     analisador = AnalisadorDadosMercado()
 
