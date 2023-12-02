@@ -197,8 +197,7 @@ if st.sidebar.button("Analisar"):
                     st.write(f"- {noticia['title']}")
             
                     # Cria o link clicável abaixo do título
-                    link_html = f"[Link]({noticia['link']})"
-                    st.markdown(link_html, unsafe_allow_html=True)
+                    st.write(f"  [Link Original]({noticia['link']})")
 
     except Exception as e:
         st.sidebar.error("Não foi possível realizar o cálculo para o ativo selecionado no momento. Tente novamente mais tarde.")
