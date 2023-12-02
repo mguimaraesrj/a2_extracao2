@@ -179,7 +179,7 @@ if st.sidebar.button("Analisar"):
             )
             st.altair_chart(chart_precos)
 
-            st.write(f"Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%:{prob_retorno*100:.2f}%, \n segundo o Movimento Browniano Geométrico.")
+            st.write(f"Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%:{prob_retorno*100:.2f}% (MBG)")
 
             # Exibir títulos e links das notícias
             st.markdown(f"\nÚltimas Notícias para {ticker_interesse}")
