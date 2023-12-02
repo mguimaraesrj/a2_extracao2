@@ -113,8 +113,24 @@ class AnalisadorDadosMercado(Ativo):
 st.sidebar.markdown("# Start Investor 📈")  # Adiciona título à barra lateral
 
 # Adiciona os inputs na barra lateral
-ticker_interesse = st.sidebar.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
+input_usuario = st.sidebar.text_input("Insira o ticker ou o nome da empresa de interesse:")
+
+# Verifica se o input é um ticker ou o nome da empresa
+ticker_interesse = None
+if input_usuario:
+    if '.' in input_usuario:  # Presume-se que é um ticker se contiver ponto (.)
+        ticker_interesse = input_usuario.upper()
+    else:
+        # Se não for um ticker, tenta obter o ticker correspondente ao nome da empresa
+        try:
+            info_empresa = yf.Ticker(input_usuario)
+            ticker_interesse = info_empresa.info['symbol']
+        except:
+            st.sidebar.error("Erro: Ticker ou nome da empresa inválido.")
+
 periodo_interesse = st.sidebar.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
+
+
 
 if st.sidebar.button("Analisar"):
     # Criar instância do AnalisadorDadosMercado
