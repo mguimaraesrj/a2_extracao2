@@ -114,18 +114,23 @@ st.sidebar.markdown("# Start Investor 📈")  # Adiciona título à barra latera
 
 # Adiciona os inputs na barra lateral
 nome_empresa = st.sidebar.text_input("Insira o nome da empresa (ex: Apple):").title()
+periodo_interesse = st.sidebar.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
 
-# Adiciona exemplo de nome de empresa para orientar o usuário
-st.sidebar.write("Exemplo: Apple Inc.")
+# Adiciona exemplo de nome de empresa e período para orientar o usuário
+st.sidebar.write("Exemplo de nome de empresa: Apple Inc.")
+st.sidebar.write("Exemplo de período: 3mo")
 
 # Converte o nome da empresa em um ticker usando yfinance
 ticker_interesse = None
 if st.sidebar.button("Analisar"):
     try:
         # Obtém o ticker correspondente ao nome da empresa
-        ticker_interesse = yf.Ticker(nome_empresa).info['symbol']
-    except (ValueError, KeyError):
-        st.sidebar.error(f"Não foi possível obter o ticker para a empresa '{nome_empresa}'. Por favor, insira um nome de empresa válido.")
+        ticker_info = yf.Ticker(nome_empresa).info
+        if not ticker_info:
+            raise ValueError("Ticker não encontrado para a empresa especificada.")
+        ticker_interesse = ticker_info['symbol']
+    except ValueError as e:
+        st.sidebar.error(str(e))
         st.stop()
 
     # Restante do código permanece inalterado
