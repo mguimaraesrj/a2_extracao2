@@ -140,7 +140,7 @@ if st.sidebar.button("Analisar"):
     st.altair_chart(chart_precos)
 
     # Exibir probabilidade na barra lateral
-    st.sidebar.markdown(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico".)
+    st.sidebar.markdown(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico.")
 
     # Exibir títulos e links das notícias
     st.markdown(f"\nÚltimas Notícias para {ticker_interesse}")
