@@ -28,12 +28,13 @@ filtro_codigo = st.sidebar.text_input("Filtrar a tabela por Ticker:", "")
 # Aplica os filtros
 df_filtrado = df[df["Ticker"].str.contains(filtro_codigo) & df["Nome"].str.contains(filtro_nome, case=False)]
 
-# Exibe o DataFrame filtrado no Streamlit
+# Adiciona um botão de alternância para mostrar/ocultar a tabela de tickers
+mostrar_tabela = st.sidebar.checkbox("Mostrar Tabela de Tickers", True)
 
-st.write("###### Não sabe o ticker da companhia que está analisando? Basta filtrar a tabela.")
-st.table(df_filtrado)
-
-
+# Exibe o DataFrame filtrado no Streamlit apenas se o botão estiver marcado
+if mostrar_tabela:
+    st.write("###### Não sabe o ticker da companhia que está analisando? Basta filtrar a tabela.")
+    st.table(df_filtrado)
 
 @dataclass
 class Ativo:
