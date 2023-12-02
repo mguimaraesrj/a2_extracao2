@@ -182,7 +182,7 @@ if st.sidebar.button("Analisar"):
             st.write(f"**Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%:{prob_retorno*100:.2f}% (MBG)**")
 
             # Exibir títulos e links das notícias
-            st.markdown(f"**\n 📰 Últimas Notícias para {ticker_interesse}**")
+            st.markdown(f"**📰 Últimas Notícias para {ticker_interesse}**")
             if noticias:
                 # Criar lista para exibir títulos e links
                 for noticia in noticias:
