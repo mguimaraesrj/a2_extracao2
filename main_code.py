@@ -193,15 +193,11 @@ if st.sidebar.button("Analisar"):
             if noticias:
                 # Criar lista para exibir títulos e links
                 for noticia in noticias:
-                    # Crie o link sem a parte específica do Streamlit
-                    link_novo = noticia['link']
-            
-                    # Crie o HTML para o link
-                    link_html = f'<a href="{link_novo}" target="_blank">{noticia["title"]}</a>'
-            
-                    # Exiba o título e o link da notícia
-                    st.markdown(link_html, unsafe_allow_html=True)
+                    # Exiba o título da notícia
+        st.write(f"- {noticia['title']}")
+
+        # Exiba o link da notícia abaixo do título
+        st.write(f"  {noticia['link']}")
 
     except Exception as e:
         st.sidebar.error("Não foi possível realizar o cálculo para o ativo selecionado no momento. Tente novamente mais tarde.")
-
