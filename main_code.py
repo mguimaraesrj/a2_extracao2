@@ -9,9 +9,14 @@ import altair as alt
 import streamlit as st
 from GoogleNews import GoogleNews
 
-# Breve descrição sobre o projeto
-st.write("## Bem-vindo ao Start Investor")
-st.write("###### Faça a sua consulta para otimizar seu tempo e aprimorar seu processo de análise.")
+# Adicione essa função para obter o ticker a partir do nome da empresa
+def obter_ticker_pelo_nome(nome_empresa):
+    sugestoes = yf.Ticker(nome_empresa).suggestions()
+    if sugestoes:
+        return sugestoes[0]['symbol']
+    else:
+        st.sidebar.error("Ticker não encontrado para o nome da empresa fornecido.")
+        return None
 
 @dataclass
 class Ativo:
@@ -110,15 +115,25 @@ class AnalisadorDadosMercado(Ativo):
 
 
 # Exemplo de uso com Streamlit
+st.write("## Bem-vindo ao Start Investor")
+st.write("###### Faça a sua consulta para otimizar seu tempo e aprimorar seu processo de análise.")
+
 st.sidebar.markdown("# Start Investor 📈")  # Adiciona título à barra lateral
 
 # Adiciona os inputs na barra lateral
-ticker_interesse = st.sidebar.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
+input_ticker_nome = st.sidebar.text_input("Insira o ticker ou o nome da empresa de interesse (ex: MGLU3 ou Magazine Luiza):").upper()
 periodo_interesse = st.sidebar.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
 
+# Adicione esta verificação para determinar se o usuário inseriu um ticker ou o nome da empresa
+if input_ticker_nome.isalpha():  # Se é uma string contendo apenas letras (nome da empresa)
+    ticker_interesse = obter_ticker_pelo_nome(input_ticker_nome)
+else:  # Se não, assume-se que é um ticker
+    ticker_interesse = input_ticker_nome
+
 if st.sidebar.button("Analisar"):
-    # Criar instância do AnalisadorDadosMercado
-    analisador = AnalisadorDadosMercado()
+    if not ticker_interesse:
+        st.sidebar.error("Por favor, forneça um ticker ou o nome da empresa.")
+    else:
 
     # Obter dados
     precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
