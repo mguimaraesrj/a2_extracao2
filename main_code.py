@@ -179,12 +179,12 @@ if st.sidebar.button("Analisar"):
             )
             st.altair_chart(chart_precos)
             # Adiciona um botão para mostrar a tabela de histórico de preços
-            if st.button("Mostrar Tabela de Histórico de Preços"):
+            if st.button("Mostrar Tabela de Histórico de Preços", key="mostrar_tabela"):
                 st.write("**Tabela de Histórico de Preços**")
-        
+            
                 # Use st.empty() para criar um espaço reservado para a tabela
                 tabela_placeholder = st.empty()
-
+            
                 # Mostre a tabela no espaço reservado
                 tabela_placeholder.table(df_precos)
 
