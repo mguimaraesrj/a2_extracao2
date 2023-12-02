@@ -173,7 +173,7 @@ if st.sidebar.button("Analisar"):
             # Exibe a tabela apenas se o botão estiver marcado
             if mostrar_tabela_precos:
                 st.write("**Tabela de Histórico de Preços**")
-                st.table(df_precos)
+                st.dataframe(df_precos)
 
             # Plotar gráfico de histórico de preços
             df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
