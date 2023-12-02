@@ -134,34 +134,34 @@ if st.sidebar.button("Analisar"):
     if not ticker_interesse:
         st.sidebar.error("Por favor, forneça um ticker ou o nome da empresa.")
     else:
+        # Restante do código permanece o mesmo
+        # Obter dados
+        precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
 
-    # Obter dados
-    precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
+        # Simular preços futuros e calcular probabilidade de retorno
+        caminhos_precos = analisador.simular_precos(precos)
+        prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
 
-    # Simular preços futuros e calcular probabilidade de retorno
-    caminhos_precos = analisador.simular_precos(precos)
-    prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
+        # Plotar gráfico de histórico de preços
+        df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
+        chart_precos = alt.Chart(df_precos).mark_line().encode(
+            x='Data:T',
+            y='Preço de Fechamento:Q'
+        ).properties(
+            width=600,
+            height=400,
+            title=f'Histórico de Preços para {ticker_interesse}'
+        )
+        st.altair_chart(chart_precos)
 
-    # Plotar gráfico de histórico de preços
-    df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
-    chart_precos = alt.Chart(df_precos).mark_line().encode(
-        x='Data:T',
-        y='Preço de Fechamento:Q'
-    ).properties(
-        width=600,
-        height=400,
-        title=f'Histórico de Preços para {ticker_interesse}'
-    )
-    st.altair_chart(chart_precos)
+        # Exibir probabilidade na barra lateral
+        st.sidebar.markdown(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico.")
 
-    # Exibir probabilidade na barra lateral
-    st.sidebar.markdown(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico.")
-
-    # Exibir títulos e links das notícias
-    st.markdown(f"\nÚltimas Notícias para {ticker_interesse}")
-    if noticias:
-        # Criar lista para exibir títulos e links
-        for noticia in noticias:
-            link_parts = noticia['link'].split('/~/+/')
-            link = link_parts[1] if len(link_parts) > 1 else noticia['link']  # Se o padrão não estiver presente, use o link original
-            st.markdown(f"- [{noticia['title']}]({link})", unsafe_allow_html=True)
+        # Exibir títulos e links das notícias
+        st.markdown(f"\nÚltimas Notícias para {ticker_interesse}")
+        if noticias:
+            # Criar lista para exibir títulos e links
+            for noticia in noticias:
+                link_parts = noticia['link'].split('/~/+/')
+                link = link_parts[1] if len(link_parts) > 1 else noticia['link']  # Se o padrão não estiver presente, use o link original
+                st.markdown(f"- [{noticia['title']}]({link})", unsafe_allow_html=True)
