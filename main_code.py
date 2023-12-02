@@ -198,4 +198,4 @@ if st.sidebar.button("Analisar"):
                     st.markdown(f"- [{noticia['title']}]({link})", unsafe_allow_html=True)
 
     except Exception as e:
-        st.sidebar.error("Não foi possível realizar o cálculo para o ativo selecionado no momento. Tente novamente mais tarde.")
+        st.sidebar.error("Há dados incompletos. Tente novamente.")
