@@ -106,7 +106,7 @@ class AnalisadorDadosMercado(Ativo):
 
 
 # Exemplo de uso com Streamlit
-st.sidebar.title("Start Investor 📈")  # Adiciona título à barra lateral
+st.sidebar.markdown("# Start Investor 📈")  # Adiciona título à barra lateral
 
 # Adiciona os inputs na barra lateral
 ticker_interesse = st.sidebar.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
@@ -131,22 +131,22 @@ if st.sidebar.button("Analisar"):
     ).properties(
         width=600,
         height=400,
-        title=f'Histórico de Preços para {ticker_interesse}'
+        title=f'**Histórico de Preços para {ticker_interesse}**'
     )
     st.altair_chart(chart_precos)
 
     # Exibir probabilidade na barra lateral
-    st.sidebar.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico")
+    st.sidebar.markdown(f"\n**Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%:** {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico")
 
     # Exibir notícias
-    st.write(f"\nÚltimas Notícias para {ticker_interesse}")
+    st.markdown(f"\n**Últimas Notícias para {ticker_interesse}**")
     if noticias:
         # Criar lista para exibir notícias
         for i, noticia in enumerate(noticias[:10]):
-            st.write(f"\nNotícia {i + 1}")
-            st.write(f"Título: {noticia['title']}")
+            st.markdown(f"\n**Notícia {i + 1}**")
+            st.markdown(f"Título: {noticia['title']}")
             
             # Tornar o link clicável usando st.markdown
             st.markdown(f"Link: [{noticia['link']}]({noticia['link']})")
             
-            st.write(f"Data: {noticia['date']}")
+            st.markdown(f"Data: {noticia['date']}")
