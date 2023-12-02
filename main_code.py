@@ -188,15 +188,20 @@ if st.sidebar.button("Analisar"):
 
             st.write(f"**Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%:{prob_retorno*100:.2f}% (MBG)**")
 
-            # Exibir títulos e links das notícias
+            # Adiciona os títulos e links das notícias
             st.markdown(f"**📰 Últimas Notícias para {ticker_interesse}**")
             if noticias:
-                # Criar lista para exibir títulos e links
                 for noticia in noticias:
+                    # Remova a parte específica do Streamlit do link
                     link_parts = noticia['link'].split('/~/+/')
-                    link = link_parts[1] if len(link_parts) > 1 else noticia['link']  # Se o padrão não estiver presente, use o link original
-                    st.markdown(f"- [{noticia['title']}]({link})", unsafe_allow_html=True)
-
-    except Exception as e:
-        st.sidebar.error("Há algo de errado com os dados. Tente novamente.")
+                    link_sem_streamlit = link_parts[1] if len(link_parts) > 1 else noticia['link']
+                    
+                    # Crie o link sem a parte específica do Streamlit
+                    link_novo = f"{link_sem_streamlit}"
+            
+                    # Exiba o título e o link da notícia
+                    st.markdown(f"- [{noticia['title']}]({link_novo})", unsafe_allow_html=True)
+            
+                except Exception as e:
+                    st.sidebar.error("Há algo de errado com os dados. Tente novamente.")
 
