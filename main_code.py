@@ -150,3 +150,22 @@ if st.sidebar.button("Analisar"):
             link_parts = noticia['link'].split('/~/+/')
             link = link_parts[1] if len(link_parts) > 1 else noticia['link']  # Se o padrão não estiver presente, use o link original
             st.markdown(f"- [{noticia['title']}]({link})", unsafe_allow_html=True)
+
+    # Adiciona uma seção para a tabela
+    st.header("Tabela de Dados")
+
+    # Crie um DataFrame com os dados relevantes
+    df_tabela = pd.DataFrame({
+        'Data': precos.index,
+        'Preço de Fechamento': precos.values,
+        'Prob. Retorno >= {:.2%}'.format(analisador.retorno_esperado): [prob_retorno] * len(precos),
+    })
+
+    # Adicione uma barra de pesquisa
+    termo_busca = st.text_input("Pesquisar na tabela:")
+
+    # Filtre o DataFrame com base no termo de pesquisa
+    df_filtrado = df_tabela[df_tabela.astype(str).apply(lambda x: termo_busca.lower() in x.values, axis=1)]
+
+    # Exiba a tabela filtrada
+    st.dataframe(df_filtrado)
