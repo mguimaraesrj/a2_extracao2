@@ -150,4 +150,4 @@ if st.sidebar.button("Analisar"):
             link_parts = noticia['link'].split('/~/+/')
             link = link_parts[1] if len(link_parts) > 1 else noticia['link']  # Se o padrão não estiver presente, use o link original
             st.markdown(f"- [{noticia['title']}]({link})", unsafe_allow_html=True)
-st.sidebar.mardown("Este dashboard foi desenvolvido como trabalho final da disciplina de Extração e Análise de Dados, sob orientação do prof. Matheus Pestana.)
+st.sidebar.mardown("Este dashboard foi desenvolvido como trabalho final da disciplina de Extração e Análise de Dados, sob orientação do prof. Matheus Pestana.")
