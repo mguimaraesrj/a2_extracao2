@@ -140,8 +140,11 @@ if st.sidebar.button("Analisar"):
     # Exibir probabilidade na barra lateral
     st.sidebar.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico")
 
+    # Adicionar um espaço em branco antes do checkbox para garantir a separação
+    st.sidebar.write(" ")
+
     # Checkbox para mostrar/notar notícias
-    show_news = st.checkbox("Mostrar Notícias")
+    show_news = st.sidebar.checkbox("Mostrar Notícias")
     
     if show_news:
         st.write(f"\nÚltimas Notícias para {ticker_interesse}")
