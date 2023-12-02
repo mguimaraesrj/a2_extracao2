@@ -152,7 +152,7 @@ else:
 
 
         # Verificar se os dados foram obtidos corretamente
-        if precos is None or noticias is None:
+            if precos is None or noticias is None:
             st.sidebar.error("Não foi possível obter dados para o ativo selecionado. Tente novamente mais tarde.")
         else:
             # Simular preços futuros e calcular probabilidade de retorno
