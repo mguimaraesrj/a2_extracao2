@@ -26,7 +26,7 @@ filtro_codigo = st.sidebar.text_input("Filtrar a tabela por Ticker:", "")
 
 
 # Aplica os filtros
-df_filtrado = df[df["Código"].str.contains(filtro_codigo) & df["Nome"].str.contains(filtro_nome, case=False)]
+df_filtrado = df[df["Ticker"].str.contains(filtro_codigo) & df["Nome"].str.contains(filtro_nome, case=False)]
 
 # Exibe o DataFrame filtrado no Streamlit
 
