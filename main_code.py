@@ -11,11 +11,11 @@ from GoogleNews import GoogleNews
 
 # Adicione essa função para obter o ticker a partir do nome da empresa
 def obter_ticker_pelo_nome(nome_empresa):
-    sugestoes = yf.Ticker(nome_empresa).suggestions()
+    sugestoes = yf.Ticker(nome_empresa).info
     if sugestoes:
-        return sugestoes[0]['symbol']
+        return sugestoes.get('symbol', None)
     else:
-        st.sidebar.error("Ticker não encontrado para o nome da empresa fornecido.")
+        st.sidebar.error(f"Não foi possível encontrar um ticker para o nome da empresa: {nome_empresa}")
         return None
 
 @dataclass
