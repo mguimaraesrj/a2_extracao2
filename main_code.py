@@ -167,9 +167,6 @@ if st.sidebar.button("Analisar"):
             caminhos_precos = analisador.simular_precos(precos)
             prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
 
-            # Adiciona um botão de alternância para mostrar/ocultar a tabela de histórico de preços
-            mostrar_tabela_precos = st.checkbox("Mostrar Tabela de Histórico de Preços")
-
             # Plotar gráfico de histórico de preços
             df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
             chart_precos = alt.Chart(df_precos).mark_line().encode(
@@ -183,9 +180,8 @@ if st.sidebar.button("Analisar"):
             st.altair_chart(chart_precos)
 
             # Exibe a tabela apenas se o botão estiver marcado
-            if mostrar_tabela_precos:
-                st.write("**Tabela de Histórico de Preços**")
-                st.dataframe(df_precos)
+            st.write("**Tabela de Histórico de Preços**")
+            st.dataframe(df_precos)
 
 
             st.write(f"**Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%:{prob_retorno*100:.2f}% (MBG)**")
