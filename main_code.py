@@ -179,15 +179,10 @@ if st.sidebar.button("Analisar"):
             )
             st.altair_chart(chart_precos)
 
-            # Adiciona um botão de alternância para mostrar/ocultar a tabela de tickers
-            mostrar_tabela_precos = st.sidebar.checkbox("Ver tabela Histórico de Preços", True)
-
-            # Exibe o DataFrame filtrado no Streamlit apenas se o botão estiver marcado
-            if mostrar_tabela_precos:
-                st.write("**Tabela de Histórico de Preços**")
-                st.table(df_precos)
-
-            
+            height = min(len(df_precos) * 25, 400)  # Define uma altura máxima de 400 pixels (ou ajuste conforme necessário)
+    
+            # Exibe a tabela limitando a altura
+            st.dataframe(df_precos, height=height)
             
 
 
