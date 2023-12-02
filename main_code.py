@@ -21,8 +21,9 @@ dados = [{'Código': 'MGLU3', 'Nome': 'Magazine Luiza'}, {'Código': 'HAPV3', 'N
 df = pd.DataFrame(dados)
 
 # Adiciona uma barra lateral para filtrar os dados
-filtro_codigo = st.sidebar.text_input("Filtrar a tabela por Ticker:", "")
 filtro_nome = st.sidebar.text_input("Filtrar a tabela por Empresa:", "")
+filtro_codigo = st.sidebar.text_input("Filtrar a tabela por Ticker:", "")
+
 
 # Aplica os filtros
 df_filtrado = df[df["Código"].str.contains(filtro_codigo) & df["Nome"].str.contains(filtro_nome, case=False)]
