@@ -138,9 +138,10 @@ if st.sidebar.button("Analisar"):
     # Exibir probabilidade na barra lateral
     st.sidebar.markdown(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico")
 
-    # Exibir títulos das notícias
+    # Exibir títulos e links das notícias
     st.markdown(f"\nÚltimas Notícias para {ticker_interesse}")
     if noticias:
-        # Criar lista para exibir títulos
+        # Criar lista para exibir títulos e links
         for noticia in noticias:
+            st.markdown(f"- [{noticia['title']}]({noticia['link']})")
             st.markdown(f"- **{noticia['title']}**")
