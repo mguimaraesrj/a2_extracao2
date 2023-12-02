@@ -138,17 +138,20 @@ if st.sidebar.button("Analisar"):
 
     # Exibir probabilidade na barra lateral
     st.sidebar.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico")
-
-# Exibir notícias
-st.write(f"\nÚltimas Notícias para {ticker_interesse}")
-if noticias:
-    if isinstance(noticias, list) and all(isinstance(noticia, dict) and 'title' in noticia and 'link' in noticia for noticia in noticias):
+# Botão para exibir as últimas notícias
+if st.sidebar.button("Ver Últimas Notícias"):
+    # Obter notícias
+    noticias = analisador.obter_noticias(ticker_interesse)
+    
+    # Exibir notícias
+    st.write(f"\nÚltimas Notícias para {ticker_interesse}")
+    if noticias:
         # Criar lista para exibir notícias
         for i, noticia in enumerate(noticias[:10]):
             st.write(f"\nNotícia {i + 1}")
-            st.markdown(f"Título: [{noticia['title']}]({noticia['link']})")
-            st.write(f"Data: {noticia.get('date', 'Data não disponível')}")
-    else:
-        st.write("Erro: 'noticias' não é uma lista de dicionários válidos.")
-else:
-    st.write("Não há notícias disponíveis.")
+            st.write(f"Título: {noticia['title']}")
+            
+            # Tornar o link clicável usando st.markdown
+            st.markdown(f"Link: [{noticia['link']}]({noticia['link']})")
+            
+            st.write(f"Data: {noticia['date']}")
