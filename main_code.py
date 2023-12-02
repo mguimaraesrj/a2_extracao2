@@ -202,6 +202,6 @@ if st.sidebar.button("Analisar"):
                     # Exiba o título e o link da notícia
                     st.markdown(f"- [{noticia['title']}]({link_novo})", unsafe_allow_html=True)
                 
-                    except Exception as e:
-                        st.sidebar.error("Há algo de errado com os dados. Tente novamente.")
+            except Exception as e:
+                st.sidebar.error("Há algo de errado com os dados. Tente novamente.")
 
