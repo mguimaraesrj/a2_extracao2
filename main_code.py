@@ -20,6 +20,10 @@ def obter_ticker_pelo_nome_da_companhia(nome_companhia):
     nome_companhia = nome_companhia.lower().replace(" ", "")
     return mapeamento_tickers.get(nome_companhia, None)
 
+# Função para adicionar sufixo ".SA" ao ticker
+def adicionar_sufixo_sa(ticker):
+    return f"{ticker}.SA"
+
 # Breve descrição sobre o projeto
 st.write("## Bem-vindo ao Start Investor")
 st.write("###### Faça a sua consulta para otimizar seu tempo e aprimorar seu processo de análise.")
