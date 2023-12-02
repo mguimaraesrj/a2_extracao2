@@ -13,6 +13,12 @@ from GoogleNews import GoogleNews
 st.write("## Bem-vindo ao Start Investor")
 st.write("###### Faça a sua consulta para otimizar seu tempo e aprimorar seu processo de análise.")
 
+file_path = "acoes-listadas.csv"
+df = pd.read_csv(file_path)
+st.table(df)
+
+
+
 @dataclass
 class Ativo:
     ticker: str
@@ -108,24 +114,6 @@ class AnalisadorDadosMercado(Ativo):
         prob = np.mean(over)
         return prob
 
-# Adiciona uma seção para a tabela
-st.header("Tabela de Dados")
-
-# Crie um DataFrame com os dados relevantes
-df_tabela = pd.DataFrame({
-    'Data': precos.index,
-    'Preço de Fechamento': precos.values,
-    'Prob. Retorno >= {:.2%}'.format(analisador.retorno_esperado): [prob_retorno] * len(precos),
-})
-
-# Adicione uma barra de pesquisa
-termo_busca = st.text_input("Pesquisar na tabela:")
-
-# Filtre o DataFrame com base no termo de pesquisa
-df_filtrado = df_tabela[df_tabela.astype(str).apply(lambda x: termo_busca.lower() in str(x).lower(), axis=1)]
-
-# Exiba a tabela
-st.dataframe(df_filtrado)
 
 # Exemplo de uso com Streamlit
 st.sidebar.markdown("# Start Investor 📈")  # Adiciona título à barra lateral
