@@ -9,6 +9,10 @@ import altair as alt
 import streamlit as st
 from GoogleNews import GoogleNews
 
+# Breve descrição sobre o projeto
+st.write("# Projeto de Análise de Investimentos 📊")
+st.write("Bem-vindo ao Start Investor! Este é um projeto de programação para análise de investimentos usando Streamlit e outras bibliotecas.")
+
 @dataclass
 class Ativo:
     ticker: str
