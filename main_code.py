@@ -135,15 +135,21 @@ class AnalisadorDadosMercado(Ativo):
 
 # Adiciona os inputs na barra lateral
 ticker_interesse = st.sidebar.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
-periodo_interesse = st.sidebar.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
 
-if st.sidebar.button("Analisar"):
-    try:
-        # Criar instância do AnalisadorDadosMercado
-        analisador = AnalisadorDadosMercado()
+# Adiciona botões para escolher entre Dias, Meses e Anos
+periodo_opcao = st.sidebar.radio("Escolha o período do histórico de preços:", ["Dias", "Meses", "Anos"])
 
-        # Obter dados
-        precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
+# Adiciona um número input entre 1 e 30
+if periodo_opcao == "Dias":
+    numero_periodo = st.sidebar.number_input("Escolha o número de dias (1-30):", min_value=1, max_value=30)
+    periodo_interesse = f"{numero_periodo}d"
+elif periodo_opcao == "Meses":
+    numero_periodo = st.sidebar.number_input("Escolha o número de meses (1-12):", min_value=1, max_value=12)
+    periodo_interesse = f"{numero_periodo}mo"
+else:
+    numero_periodo = st.sidebar.number_input("Escolha o número de anos (1-10):", min_value=1, max_value=10)
+    periodo_interesse = f"{numero_periodo}y"
+
 
         # Verificar se os dados foram obtidos corretamente
         if precos is None or noticias is None:
@@ -164,7 +170,7 @@ if st.sidebar.button("Analisar"):
                 title=f'Histórico de Preços para {ticker_interesse}'
             )
             st.altair_chart(chart_precos)
-            
+
             st.write(f"Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico.")
 
             # Exibir títulos e links das notícias
@@ -178,4 +184,3 @@ if st.sidebar.button("Analisar"):
 
     except Exception as e:
         st.sidebar.error("Não foi possível realizar o cálculo para o ativo selecionado no momento. Tente novamente mais tarde.")
-        # Opcional: você pode imprimir informações de depuração usando print(e) ou st.error(str(e))
