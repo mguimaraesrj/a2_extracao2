@@ -113,21 +113,28 @@ class AnalisadorDadosMercado(Ativo):
 st.sidebar.markdown("# Start Investor 📈")  # Adiciona título à barra lateral
 
 # Adiciona os inputs na barra lateral
-ticker_interesse = st.sidebar.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
-periodo_interesse = st.sidebar.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
+nome_empresa = st.sidebar.text_input("Insira o nome da empresa (ex: Apple):").title()
 
+# Adiciona exemplo de nome de empresa para orientar o usuário
+st.sidebar.write("Exemplo: Apple Inc.")
+
+# Converte o nome da empresa em um ticker usando yfinance
+ticker_interesse = None
 if st.sidebar.button("Analisar"):
-    # Criar instância do AnalisadorDadosMercado
+    try:
+        # Obtém o ticker correspondente ao nome da empresa
+        ticker_interesse = yf.Ticker(nome_empresa).info['symbol']
+    except (ValueError, KeyError):
+        st.sidebar.error(f"Não foi possível obter o ticker para a empresa '{nome_empresa}'. Por favor, insira um nome de empresa válido.")
+        st.stop()
+
+    # Restante do código permanece inalterado
     analisador = AnalisadorDadosMercado()
-
-    # Obter dados
     precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
-
-    # Simular preços futuros e calcular probabilidade de retorno
     caminhos_precos = analisador.simular_precos(precos)
     prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
 
-    # Plotar gráfico de histórico de preços
+    # Restante do código permanece inalterado
     df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
     chart_precos = alt.Chart(df_precos).mark_line().encode(
         x='Data:T',
@@ -139,14 +146,11 @@ if st.sidebar.button("Analisar"):
     )
     st.altair_chart(chart_precos)
 
-    # Exibir probabilidade na barra lateral
     st.sidebar.markdown(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico.")
 
-    # Exibir títulos e links das notícias
     st.markdown(f"\nÚltimas Notícias para {ticker_interesse}")
     if noticias:
-        # Criar lista para exibir títulos e links
         for noticia in noticias:
             link_parts = noticia['link'].split('/~/+/')
-            link = link_parts[1] if len(link_parts) > 1 else noticia['link']  # Se o padrão não estiver presente, use o link original
+            link = link_parts[1] if len(link_parts) > 1 else noticia['link']
             st.markdown(f"- [{noticia['title']}]({link})", unsafe_allow_html=True)
