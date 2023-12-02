@@ -134,20 +134,20 @@ class AnalisadorDadosMercado(Ativo):
 # Exemplo de uso com Streamlit
 
 # Adiciona os inputs na barra lateral
-ticker_interesse = st.sidebar.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
+ticker_interesse = st.sidebar.text_input("1. Insira o ticker de interesse (ex: MGLU3):").upper()
 
 # Adiciona botões para escolher entre Dias, Meses e Anos
-periodo_opcao = st.sidebar.radio("Escolha o período do histórico de preços:", ["Dias", "Meses", "Anos"])
+periodo_opcao = st.sidebar.radio("2. Escolha o período do histórico de preços:", ["Dias", "Meses", "Anos"])
 
 # Adiciona um número input entre 1 e 30
 if periodo_opcao == "Dias":
-    numero_periodo = st.sidebar.number_input("Escolha o número de dias (1-30):", min_value=1, max_value=30)
+    numero_periodo = st.sidebar.number_input("3. Escolha o número de dias (1-30):", min_value=1, max_value=30)
     periodo_interesse = f"{numero_periodo}d"
 elif periodo_opcao == "Meses":
-    numero_periodo = st.sidebar.number_input("Escolha o número de meses (1-12):", min_value=1, max_value=12)
+    numero_periodo = st.sidebar.number_input("3. Escolha o número de meses (1-12):", min_value=1, max_value=12)
     periodo_interesse = f"{numero_periodo}mo"
 else:
-    numero_periodo = st.sidebar.number_input("Escolha o número de anos:", min_value=1, max_value=1000)
+    numero_periodo = st.sidebar.number_input("4. Escolha o número de anos:", min_value=1, max_value=1000)
     periodo_interesse = f"{numero_periodo}y"
 
 # Restante do código permanece igual
