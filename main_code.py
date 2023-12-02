@@ -11,7 +11,7 @@ from GoogleNews import GoogleNews
 
 # Breve descrição sobre o projeto
 st.write("## Bem-vindo ao Start Investor")
-st.write("### Faça a sua consulta para otimizar seu tempo e aprimorar seu processo de análise.")
+st.write("###### Faça a sua consulta para otimizar seu tempo e aprimorar seu processo de análise.")
 st.write("Este dashboard foi desenvolvido como trabalho final da disciplina de Extração e Análise de Dados, na graduação em Comunicação Digital da FGV ECMI, sob orientação do prof. Matheus Pestana. Nosso objetivo é proporcionar ao usuário (investidor pessoa física) uma análise sobre um ativo do seu interesse na B3. Através de nossa plataforma, o usuário consegue ter acesso à informações como: Histórico de  Preços, Probabilidade de Retorno (MBG) e notícias relacionadas ao ativo. Membros do grupo: Lavínia Zactiti, Luana Moura, Matheus Guimarães e Nataly Abreu.")
 
 @dataclass
