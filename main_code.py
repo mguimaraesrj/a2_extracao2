@@ -181,7 +181,12 @@ if st.sidebar.button("Analisar"):
             # Adiciona um botão para mostrar a tabela de histórico de preços
             if st.button("Mostrar Tabela de Histórico de Preços"):
                 st.write("**Tabela de Histórico de Preços**")
-                st.table(df_precos)
+        
+                # Use st.empty() para criar um espaço reservado para a tabela
+                tabela_placeholder = st.empty()
+
+                # Mostre a tabela no espaço reservado
+                tabela_placeholder.table(df_precos)
 
 
             st.write(f"**Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%:{prob_retorno*100:.2f}% (MBG)**")
