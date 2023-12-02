@@ -124,7 +124,6 @@ if st.sidebar.button("Analisar"):
     prob_retorno = analisador.calcular_retorno_probabilidade(caminhos_precos)
 
     # Plotar gráfico de histórico de preços
-    st.write(f"\nHistórico de Preços para {ticker_interesse} (últimos {periodo_interesse}):")
     df_precos = pd.DataFrame({'Data': precos.index, 'Preço de Fechamento': precos.values})
     chart_precos = alt.Chart(df_precos).mark_line().encode(
         x='Data:T',
