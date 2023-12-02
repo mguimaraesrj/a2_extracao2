@@ -3,11 +3,10 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 from scipy.stats import norm
-from statsmodels.tsa.holtwinters import ExponentialSmoothing
-from dataclasses import dataclass
 import altair as alt
 import streamlit as st
 from GoogleNews import GoogleNews
+from dataclasses import dataclass
 
 @dataclass
 class Ativo:
@@ -104,6 +103,18 @@ class AnalisadorDadosMercado(Ativo):
         prob = np.mean(over)
         return prob
 
+    def exibir_noticias(self, noticias):
+        st.write(f"\nÚltimas Notícias para {self.ticker}")
+        if noticias:
+            # Criar lista para exibir notícias
+            for i, noticia in enumerate(noticias[:10]):
+                st.write(f"\nNotícia {i + 1}")
+                st.write(f"Título: {noticia['title']}")
+                
+                # Tornar o link clicável usando st.markdown
+                st.markdown(f"Link: [{noticia['link']}]({noticia['link']})")
+                
+                st.write(f"Data: {noticia['date']}")
 
 # Exemplo de uso com Streamlit
 st.sidebar.title("Start Investor")  # Adiciona título à barra lateral
@@ -112,7 +123,7 @@ st.sidebar.title("Start Investor")  # Adiciona título à barra lateral
 ticker_interesse = st.sidebar.text_input("Insira o ticker de interesse (ex: MGLU3):").upper()
 periodo_interesse = st.sidebar.text_input("Insira o período desejado para o histórico de preços (ex: 3mo):")
 
-# Botão para acionar a análise
+# Botão para realizar a análise
 if st.sidebar.button("Analisar"):
     # Criar instância do AnalisadorDadosMercado
     analisador = AnalisadorDadosMercado()
@@ -140,21 +151,6 @@ if st.sidebar.button("Analisar"):
     # Exibir probabilidade na barra lateral
     st.sidebar.write(f"\nProbabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%: {prob_retorno*100:.2f}%, segundo o Movimento Browniano Geométrico")
 
-    # Adicionar um espaço em branco antes do checkbox para garantir a separação
-    st.sidebar.write(" ")
-
-    # Checkbox para mostrar/notar notícias
-    show_news = st.sidebar.checkbox("Mostrar Notícias")
-    
-    if show_news:
-        st.write(f"\nÚltimas Notícias para {ticker_interesse}")
-        if noticias:
-            # Criar lista para exibir notícias
-            for i, noticia in enumerate(noticias[:10]):
-                st.write(f"\nNotícia {i + 1}")
-                st.write(f"Título: {noticia['title']}")
-                
-                # Tornar o link clicável usando st.markdown
-                st.markdown(f"Link: [{noticia['link']}]({noticia['link']})")
-                
-                st.write(f"Data: {noticia['date']}")
+    # Botão para exibir notícias
+    if st.sidebar.button("Exibir Notícias"):
+        analisador.exibir_noticias(noticias)
