@@ -141,13 +141,14 @@ if st.sidebar.button("Analisar"):
 
 # Exibir notícias
 st.write(f"\nÚltimas Notícias para {ticker_interesse}")
-if noticias and isinstance(noticias, list):
-    # Criar lista para exibir notícias
-    for i, noticia in enumerate(noticias[:10]):
-        st.write(f"\nNotícia {i + 1}")
-        if 'title' in noticia and 'link' in noticia:
+if noticias:
+    if isinstance(noticias, list) and all(isinstance(noticia, dict) and 'title' in noticia and 'link' in noticia for noticia in noticias):
+        # Criar lista para exibir notícias
+        for i, noticia in enumerate(noticias[:10]):
+            st.write(f"\nNotícia {i + 1}")
             st.markdown(f"Título: [{noticia['title']}]({noticia['link']})")
-        else:
-            st.write("Notícia sem título ou link disponíveis.")
-        st.write(f"Data: {noticia.get('date', 'Data não disponível')}")
-
+            st.write(f"Data: {noticia.get('date', 'Data não disponível')}")
+    else:
+        st.write("Erro: 'noticias' não é uma lista de dicionários válidos.")
+else:
+    st.write("Não há notícias disponíveis.")
