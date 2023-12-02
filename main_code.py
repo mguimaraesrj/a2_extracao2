@@ -179,9 +179,13 @@ if st.sidebar.button("Analisar"):
             )
             st.altair_chart(chart_precos)
 
+            # Adiciona um botão de alternância para mostrar/ocultar a tabela de histórico de preços
+            mostrar_tabela = st.checkbox("Mostrar Tabela de Histórico de Preços")
+
             # Exibe a tabela apenas se o botão estiver marcado
-            st.write("**Tabela de Histórico de Preços**")
-            st.dataframe(df_precos)
+            if mostrar_tabela
+                st.write("**Tabela de Histórico de Preços**")
+                st.dataframe(df_precos)
 
 
             st.write(f"**Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%:{prob_retorno*100:.2f}% (MBG)**")
