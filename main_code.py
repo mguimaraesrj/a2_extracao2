@@ -35,7 +35,6 @@ mostrar_tabela = mostrar_tabela and not df_filtrado.empty
 
 # Exibe o DataFrame filtrado no Streamlit apenas se o botão estiver marcado
 if mostrar_tabela:
-    st.write("###### Não sabe o ticker da companhia que está analisando? Basta filtrar a tabela.")
     st.table(df_filtrado)
 
 @dataclass
