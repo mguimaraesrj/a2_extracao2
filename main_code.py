@@ -26,7 +26,7 @@ filtro_nome = st.sidebar.text_input("Filtrar a tabela por Empresa:", "")
 mostrar_tabela = not (filtro_nome == "")
 
 # Aplica os filtros e verifica se há dados para mostrar
-df_filtrado = df[df["Ticker"].str.contains(filtro_codigo) & df["Empresa"].str.contains(filtro_nome, case=False)]
+df_filtrado = df[df["Empresa"].str.contains(filtro_nome, case=False)]
 mostrar_tabela = mostrar_tabela and not df_filtrado.empty
 
 # Exibe o DataFrame filtrado no Streamlit apenas se o botão estiver marcado
