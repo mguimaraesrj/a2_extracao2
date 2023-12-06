@@ -192,7 +192,7 @@ if st.sidebar.button("Analisar"):
             st.write(f"**Probabilidade de Retorno ser maior ou igual a {porcentagem_desejada*100}% (MBG): {prob_retorno*100:.2f}%**")
 
             # Explanação do Movimento Browniano Geométrico
-            st.text_area(""ℹ️O que é o Movimento Browniano Geométrico (MBG)?",value="O MBG simula trajetórias futuras de preços de ações usando retornos log-normais,
+            st.text_area("ℹ️ O que é o Movimento Browniano Geométrico (MBG)?",value="O MBG simula trajetórias futuras de preços de ações usando retornos log-normais,
             considerando média e volatilidade históricas." "Ele é empregado para estimar a probabilidade
             de atingir um determinado retorno, proporcionando insights sobre o risco e a incerteza associados
             aos movimentos de preços no mercado financeiro." "Portanto, o resultado obtido reflete a análise do Movimento Browniano Geométrico, considerando as características históricas do ativo", height=100)
