@@ -204,12 +204,15 @@ if st.sidebar.button("Analisar"):
 
             # Exibir títulos e links das notícias
             st.markdown(f"**📰 Últimas Notícias para {ticker_interesse}**")
+            # Exibir títulos e links das notícias
+            st.markdown(f"**📰 Últimas Notícias para {ticker_interesse}**")
             if noticias:
                 # Criar lista para exibir títulos e links
                 for noticia in noticias:
                     link_parts = noticia['link'].split('/~/+/')
                     link = link_parts[1] if len(link_parts) > 1 else noticia['link']  # Se o padrão não estiver presente, use o link original
                     st.markdown(f"- [{noticia['title']}]({link})", unsafe_allow_html=True)
+
 
     except Exception as e:
         st.sidebar.error("Há dados incompletos. Tente novamente.")
