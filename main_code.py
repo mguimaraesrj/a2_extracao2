@@ -196,7 +196,7 @@ if st.sidebar.button("Analisar"):
             O MBG simula trajetórias futuras de preços de ações usando retornos log-normais,
             considerando média e volatilidade históricas. Ele é empregado para estimar a probabilidade
             de atingir um determinado retorno, proporcionando insights sobre o risco e a incerteza associados
-            aos movimentos de preços no mercado financeiro.
+            aos movimentos de preços no mercado financeiro. Portanto, o resultado obtido reflete a análise do Movimento Browniano Geométrico, considerando as características históricas do ativo
             """)
 
             # Exibir títulos e links das notícias
