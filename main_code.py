@@ -23,7 +23,7 @@ df = pd.DataFrame(dados)
 filtro_nome = st.sidebar.text_input("Filtrar a tabela por Empresa:", "")
 
 # Verifica se ambos os campos de filtro estão vazios
-mostrar_tabela = not (filtro_nome == "" and filtro_codigo == "")
+mostrar_tabela = not (filtro_nome == "")
 
 # Aplica os filtros e verifica se há dados para mostrar
 df_filtrado = df[df["Ticker"].str.contains(filtro_codigo) & df["Empresa"].str.contains(filtro_nome, case=False)]
