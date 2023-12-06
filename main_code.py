@@ -21,17 +21,16 @@ df = pd.DataFrame(dados)
 
 # Adiciona uma barra lateral para filtrar os dados
 filtro_nome = st.sidebar.text_input("Filtrar a tabela por Empresa:", "")
-filtro_codigo = st.sidebar.text_input("Filtrar a tabela por Ticker:", "")
 
 # Adiciona um tooltip personalizado para explicar o termo "Ticker"
 st.sidebar.text_area("ℹ️ O que é um Ticker?", value="Ticker é um símbolo único atribuído a um ativo financeiro em uma bolsa de valores. "
                           "Ele é utilizado para identificar e negociar esse ativo no mercado.")
 
 # Verifica se ambos os campos de filtro estão vazios
-mostrar_tabela = not (filtro_nome == "" and filtro_codigo == "")
+mostrar_tabela = not (filtro_nome == "")
 
 # Aplica os filtros e verifica se há dados para mostrar
-df_filtrado = df[df["Ticker"].str.contains(filtro_codigo) & df["Empresa"].str.contains(filtro_nome, case=False)]
+df_filtrado = df[df["Empresa"].str.contains(filtro_nome, case=False)]
 mostrar_tabela = mostrar_tabela and not df_filtrado.empty
 
 # Exibe o DataFrame filtrado no Streamlit apenas se o botão estiver marcado
@@ -194,7 +193,7 @@ if st.sidebar.button("Analisar"):
             st.write(f"**Probabilidade de Retorno ser maior ou igual a {porcentagem_desejada*100}% (MBG): {prob_retorno*100:.2f}%**")
 
             # Explanação do Movimento Browniano Geométrico
-            st.markdown("""
+            st.text_area("""
             **Movimento Browniano Geométrico (MBG):**
             
             O MBG simula trajetórias futuras de preços de ações usando retornos log-normais,
