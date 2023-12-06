@@ -150,11 +150,14 @@ else:
     numero_periodo = st.sidebar.number_input("3) Escolha o número de anos:", min_value=1, max_value=1000)
     periodo_interesse = f"{numero_periodo}y"
 
+# Adiciona um novo input para a porcentagem desejada
+porcentagem_desejada = st.sidebar.slider("4) Escolha a porcentagem desejada para o MBG:", min_value=0.01, max_value=1.0, value=0.05, step=0.01)
+
 # Restante do código permanece igual
 if st.sidebar.button("Analisar"):
     try:
-        # Criar instância do AnalisadorDadosMercado
-        analisador = AnalisadorDadosMercado(days_ahead=numero_periodo)
+        # Criar instância do AnalisadorDadosMercado com a porcentagem desejada
+        analisador = AnalisadorDadosMercado(days_ahead=numero_periodo, return_expected=porcentagem_desejada)
 
         # Obter dados
         precos, noticias = analisador.baixar_dados(ticker_interesse, periodo_interesse)
@@ -183,10 +186,8 @@ if st.sidebar.button("Analisar"):
     
             # Exibe a tabela limitando a altura
             st.dataframe(df_precos, height=height)
-            
 
-
-            st.write(f"**Probabilidade de Retorno ser maior ou igual a {analisador.retorno_esperado*100}%:{prob_retorno*100:.2f}% (MBG)**")
+            st.write(f"**Probabilidade de Retorno ser maior ou igual a {porcentagem_desejada*100}% (MBG): {prob_retorno*100:.2f}%**")
 
             # Exibir títulos e links das notícias
             st.markdown(f"**📰 Últimas Notícias para {ticker_interesse}**")
