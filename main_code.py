@@ -23,12 +23,12 @@ df = pd.DataFrame(dados)
 filtro_nome = st.sidebar.text_input("Filtrar a tabela por Empresa:", "")
 filtro_codigo = st.sidebar.text_input("Filtrar a tabela por Ticker:", "")
 
+# Verifica se ambos os campos de filtro estão vazios
+mostrar_tabela = not (filtro_nome == "" and filtro_codigo == "")
 
-# Aplica os filtros
+# Aplica os filtros e verifica se há dados para mostrar
 df_filtrado = df[df["Ticker"].str.contains(filtro_codigo) & df["Empresa"].str.contains(filtro_nome, case=False)]
-
-# Adiciona um botão de alternância para mostrar/ocultar a tabela de tickers
-mostrar_tabela = st.sidebar.checkbox("Ver Tabela Tickers x Empresas", True)
+mostrar_tabela = mostrar_tabela and not df_filtrado.empty
 
 # Exibe o DataFrame filtrado no Streamlit apenas se o botão estiver marcado
 if mostrar_tabela:
