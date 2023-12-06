@@ -25,7 +25,7 @@ filtro_nome = st.sidebar.text_input("Filtrar a tabela por Empresa:", "")
 
 # Adiciona um tooltip personalizado para explicar o termo "Ticker"
 st.sidebar.text_area("O que é um Ticker?", value="Ticker é um símbolo único atribuído a um ativo financeiro em uma bolsa de valores. "
-                          "Ele é utilizado para identificar e negociar esse ativo no mercado.")
+                          "Ele é utilizado para identificar e negociar esse ativo no mercado de ações.")
 
 # Verifica se ambos os campos de filtro estão vazios
 mostrar_tabela = not (filtro_nome == "")
